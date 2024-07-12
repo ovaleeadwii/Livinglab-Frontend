@@ -17,7 +17,7 @@ const WindRoseChart = () => {
       type: "column",
     },
     title: {
-      text: "Wind Rose",
+      text: "Pie Chart",
     },
     pane: {
       size: "85%",
@@ -72,19 +72,16 @@ const WindRoseChart = () => {
   });
 
   useEffect(() => {
-    const apiUrl = "https://c-greenproject.org:3333/getdatachart"; // ganti dengan API URL yang benar
-
     axios
-      .get(apiUrl)
+      .get("https://c-greenproject.org:3333/getdatachart")
       .then((response) => {
         const data = response.data;
-        console.log("Data fetched from API:", data);
 
-        // Ekstraksi data dari API
-        const windDirections = data.result.map((item) => item.suhu_air);
-        const windSpeeds = data.result.map((item) => item.humidity);
+        // Assuming the API response contains data like this:
+        // { Winddirection: {N: value, NNE: value, ...}, kecepatan_angin: {lowSpeed: [], mediumSpeed: [], ...} }
+        const windDirections = data.Winddirection || {};
+        const windSpeeds = data.kecepatan_angin || {};
 
-        // Transformasi data sesuai dengan kategori arah angin
         const categories = [
           "N",
           "NNE",
@@ -103,16 +100,51 @@ const WindRoseChart = () => {
           "NW",
           "NNW",
         ];
+        const windData = categories.map(
+          (category) => windDirections[category] || 0
+        );
 
-        const seriesData = categories.map((category, index) => ({
-          name: category,
-          data: windDirections[index] || [],
-          color: index % 2 === 0 ? "#84e3c8" : "#a8e6cf",
-        }));
+        const newSeries = [
+          {
+            name: "Calm",
+            data: windData,
+            color: "#84e3c8",
+          },
+          {
+            name: "1.54 m/s",
+            data: windSpeeds.lowSpeed || [],
+            color: "#a8e6cf",
+          },
+          {
+            name: "3.09 m/s",
+            data: windSpeeds.mediumSpeed || [],
+            color: "#dcedc1",
+          },
+          {
+            name: "5.14 m/s",
+            data: windSpeeds.highSpeed || [],
+            color: "#ffd3b6",
+          },
+          {
+            name: "8.23 m/s",
+            data: windSpeeds.veryHighSpeed || [],
+            color: "#ffaaa5",
+          },
+          {
+            name: "10.80 m/s",
+            data: windSpeeds.veryVeryHighSpeed || [],
+            color: "#ff8b94",
+          },
+          {
+            name: "15.50 m/s",
+            data: windSpeeds.extremeSpeed || [],
+            color: "#ff7480",
+          },
+        ];
 
         setOptions((prevOptions) => ({
           ...prevOptions,
-          series: seriesData,
+          series: newSeries,
         }));
       })
       .catch((error) => {
