@@ -14,6 +14,7 @@ import CardDirection from "../components/Dashboard/Card/CardDirection";
 import DownloadComponents from "../components/Dashboard/Download/DownloadComponents";
 import NavbarDashboardResponsive from "../components/Responsive/NavbarDashboard";
 import WindRoseChart from "../components/Dashboard/Chart/WindRoseChat";
+import WindChartdht from "../components/Dashboard/Chart/WindChartdht";
 
 const Dashboard = () => {
   const [apiURL, setApiURL] = useState(import.meta.env.VITE_CHART_DATA); // Default ke data Dayan
@@ -143,8 +144,8 @@ const Dashboard = () => {
               <div className="flex">
                 <ChartMicroclimate title="Microclimate Chart" API={apiURL} />
               </div>
-              <div className="flex">
-                <WindRoseChart />
+              <div className="flex gap-5 justify-center">
+                <WindRoseChart /> <WindChartdht />
               </div>
               <TableMicroclimate />
             </div>
