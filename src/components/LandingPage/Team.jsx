@@ -4,7 +4,6 @@ import "aos/dist/aos.css";
 import affan from "../../assets/affan.svg";
 import auliya from "../../assets/auliya.svg";
 import Herly from "../../assets/Herly.svg";
-import Pakardian from "../../assets/pakardian.svg";
 import Rey from "../../assets/Rey.svg";
 import Ade from "../../assets/Ade.svg";
 
@@ -22,19 +21,6 @@ const Team = () => {
         <div className="hero-content ">
           <div className="hero-content  " data-aos="fade-left">
             <div className="carousel rounded-box flex flex-col items-start md:items-center lg:flex-row gap-5 md:gap-10 ">
-              <div className="carousel-item ">
-                <div className="card bg-[#FFFFFF] md:w-72 w-52 shadow-xl border border-[#537052]">
-                  <figure className="px-10 pt-10">
-                    <img src={Pakardian} alt="people" className="rounded-xl" />
-                  </figure>
-                  <div className="card-body items-center text-center py-0 ">
-                    <h2 className="card-title text-[#537052]">Manager</h2>
-                  </div>
-                  <div className="card-body items-center text-center bg-[#537052] rounded-xl">
-                    <p className="text-white ">Dr Ardian Ulvan S.T.MSc</p>
-                  </div>
-                </div>
-              </div>
               <div className="carousel-item ">
                 <div className="card bg-[#FFFFFF] md:w-72 w-52 shadow-xl border border-[#537052]">
                   <figure className="px-10 pt-10">

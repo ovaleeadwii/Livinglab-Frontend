@@ -14,8 +14,6 @@ const LandingPage = () => {
     <div>
       <Navbar />
       <NavbarResponsive />
-      {/* 
-      <NavbarBimbingan /> */}
       <Hero />
       <Divider />
       <About />
