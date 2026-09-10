@@ -48,7 +48,7 @@ function ProductCard({ item, onSelectProduct }) {
   );
 }
 
-export default function ShopPage({ setPage }) {
+export default function ShopPage({ setPage, user }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [filterCategory, setFilterCategory] = useState("Semua");
   const [sortBy, setSortBy] = useState("terbaru");
@@ -131,16 +131,15 @@ export default function ShopPage({ setPage }) {
     if (filterCategory === "Semua") return true;
     return item.category.toLowerCase() === filterCategory.toLowerCase();
   }).sort((a, b) => {
-    // Mengubah format string "Rp. 15.000" menjadi angka murni (15000) untuk perbandingan
     const priceA = parseInt(a.price.replace(/[^0-9]/g, ''));
     const priceB = parseInt(b.price.replace(/[^0-9]/g, ''));
 
     if (sortBy === "termurah") {
-      return priceA - priceB; // Dari yang paling murah ke mahal
+      return priceA - priceB;
     } else if (sortBy === "termahal") {
-      return priceB - priceA; // Dari yang paling mahal ke murah
+      return priceB - priceA;
     } else {
-      return 0; // Default / Terbaru
+      return 0;
     }
   });
 
@@ -155,7 +154,7 @@ export default function ShopPage({ setPage }) {
             </svg>
           </div>
           <div className="logo-text">
-            <div className="main">Living <span>Smart</span></div>
+            <div className="main">AGRI-<span>ICS</span></div>
             <div className="tag">Solusi sayur segar dan sehat</div>
           </div>
         </div>
@@ -171,12 +170,30 @@ export default function ShopPage({ setPage }) {
         </div>
 
         <div className="actions">
-          <div className="action-item">
-            <div className="icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+          <div 
+            className="action-item" 
+            onClick={() => {
+              if (user) {
+                setPage('profile'); 
+              } else {
+                setPage('auth');    
+              }
+            }} 
+            style={{ cursor: 'pointer' }}
+          >
+            <div className="icon" style={user ? { overflow: 'hidden', borderRadius: '50%', width: '38px', height: '38px' } : {}}>
+              {user && user.avatar ? (
+                <img src={user.avatar} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              ) : (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+              )}
             </div>
-            <div className="label"><small>Sign in / Register</small><strong>My Account</strong></div>
+            <div className="label">
+              <small>{user ? user.role || 'Member' : 'Sign in / Register'}</small>
+              <strong>{user ? user.name : 'My Account'}</strong>
+            </div>
           </div>
+
           <div className="action-item">
             <div className="icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
@@ -195,8 +212,6 @@ export default function ShopPage({ setPage }) {
         </nav>
       </div>
 
-      {/* Hero / Banner Shop */}
-      {/* Hero / Banner Shop ala Landing Page */}
       {/* Hero / Banner Shop */}
       <section className="hero shop-landing-hero">
         <div className="hero-content">
@@ -287,7 +302,7 @@ export default function ShopPage({ setPage }) {
         </div>
       </section>
 
-      {/* BANNER LAYANAN (SEPERTI DI GAMBAR REFERENSI) */}
+      {/* BANNER LAYANAN */}
       <section className="service-features-banner">
         <div className="service-feature-item">
           <div className="service-icon-circle">
@@ -321,7 +336,6 @@ export default function ShopPage({ setPage }) {
       </section>
 
       {/* FOOTER HIJAU TUA */}
-      {/* FOOTER HIJAU TUA */}
       <footer className="footer">
         <div className="footer-grid">
           <div className="footer-brand">
@@ -329,7 +343,7 @@ export default function ShopPage({ setPage }) {
               <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l9 7h-2v10h-5v-6H10v6H5V10H3z"/><path d="M12 9c-1.5-2-4-2-4 0 1.5 0 3 .5 4 2"/></svg>
             </div>
             <div>
-              <div className="name">Living Smart</div>
+              <div className="name">AGRI-ICS</div>
               <div className="tag">Solusi sayur segar dan sehat</div>
               <p className="desc">Menghubungkan teknologi dan pertanian untuk masa depan pangan yang lebih hijau dan berkelanjutan.</p>
             </div>
