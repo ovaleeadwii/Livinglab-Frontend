@@ -132,7 +132,42 @@ const FloatingDot = ({
 ========================================================= */
 
 const LandingPage = () => {
-  const [showIntro, setShowIntro] = useState(true);
+  /* =======================================================
+     INTRO STATE
+
+     Intro muncul:
+     - pertama kali membuka website
+     - ketika browser di-refresh
+
+     Intro TIDAK muncul:
+     - Dashboard -> Home
+     - Market -> Home
+     - navigasi internal React Router
+  ======================================================= */
+
+  const [showIntro, setShowIntro] = useState(() => {
+    const navigation =
+      performance.getEntriesByType("navigation")[0];
+
+    const navigationType =
+      navigation?.type || "navigate";
+
+    const introShown =
+      sessionStorage.getItem("agri-ics-intro-shown");
+
+    // Refresh browser -> tampilkan intro lagi
+    if (navigationType === "reload") {
+      return true;
+    }
+
+    // Pertama kali membuka website
+    if (!introShown) {
+      return true;
+    }
+
+    // Navigasi internal -> jangan tampilkan
+    return false;
+  });
 
   const [mobileMenuOpen, setMobileMenuOpen] =
     useState(false);
@@ -148,12 +183,19 @@ const LandingPage = () => {
   ======================================================= */
 
   useEffect(() => {
+    if (!showIntro) return;
+
     const timer = setTimeout(() => {
       setShowIntro(false);
+
+      sessionStorage.setItem(
+        "agri-ics-intro-shown",
+        "true"
+      );
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [showIntro]);
 
   /* =======================================================
      SCROLL STATE
@@ -385,7 +427,7 @@ const LandingPage = () => {
           }}
           transition={{
             duration: 0.7,
-            delay: 2.1,
+            delay: showIntro ? 2.1 : 0.15,
             ease: "easeOut",
           }}
           className={`fixed left-0 right-0 top-0 z-[100] transition-all duration-500 ${
@@ -486,7 +528,7 @@ const LandingPage = () => {
                 }}
               >
                 <Link
-                  to="/marketplace"
+                  to="/market"
                   className="block rounded-full bg-[#B9EE91] px-6 py-3 text-sm font-semibold text-[#28432D] shadow-lg transition-colors duration-300 hover:bg-white"
                 >
                   Marketplace
@@ -613,7 +655,7 @@ const LandingPage = () => {
                     </Link>
 
                     <Link
-                      to="/marketplace"
+                      to="/market"
                       onClick={() =>
                         setMobileMenuOpen(
                           false
@@ -652,7 +694,7 @@ const LandingPage = () => {
             }}
             transition={{
               duration: 1.6,
-              delay: 2.1,
+              delay: showIntro ? 2.1 : 0,
               ease: "easeOut",
             }}
             className="absolute inset-0"
@@ -798,7 +840,7 @@ const LandingPage = () => {
                     }}
                   >
                     <Link
-                      to="/marketplace"
+                      to="/market"
                       className="group flex items-center justify-center gap-3 rounded-full border border-white/25 bg-white/10 px-7 py-4 text-sm font-semibold text-white backdrop-blur-md transition-colors duration-300 hover:bg-white/20"
                     >
                       Explore Marketplace
@@ -815,9 +857,7 @@ const LandingPage = () => {
 
             </motion.div>
 
-            {/* =================================================
-                FLOATING GREENHOUSE
-            ================================================= */}
+            {/* FLOATING GREENHOUSE */}
 
             <motion.div
               initial={{
@@ -834,7 +874,7 @@ const LandingPage = () => {
               }}
               transition={{
                 duration: 1.1,
-                delay: 2.45,
+                delay: showIntro ? 2.45 : 0.3,
                 ease: [0.16, 1, 0.3, 1],
               }}
               className="pointer-events-none absolute -bottom-1 right-[-45px] hidden w-[320px] md:block lg:right-[5px] lg:w-[380px] xl:right-[35px] xl:w-[420px]"
@@ -898,7 +938,7 @@ const LandingPage = () => {
               transition={{
                 opacity: {
                   duration: 1,
-                  delay: 3.5,
+                  delay: showIntro ? 3.5 : 1,
                 },
                 y: {
                   duration: 2.2,
@@ -1107,8 +1147,6 @@ const LandingPage = () => {
 
           <div className="mx-auto max-w-7xl">
 
-            {/* SECTION HEADER */}
-
             <motion.div
               initial="hidden"
               whileInView="visible"
@@ -1149,8 +1187,6 @@ const LandingPage = () => {
               </motion.p>
 
             </motion.div>
-
-            {/* FEATURE CARDS */}
 
             <motion.div
               initial="hidden"
@@ -1201,13 +1237,9 @@ const LandingPage = () => {
                   className="group relative flex min-h-[330px] flex-col overflow-hidden rounded-[1.5rem] border border-[#D5E3D0] bg-[#F8FBF6] p-7 shadow-[0_8px_25px_rgba(50,80,45,.04)]"
                 >
 
-                  {/* NUMBER */}
-
                   <span className="text-xs font-bold tracking-[0.2em] text-[#8BA383]">
                     {feature.number}
                   </span>
-
-                  {/* CONTENT */}
 
                   <div className="mt-auto">
 
@@ -1220,8 +1252,6 @@ const LandingPage = () => {
                     </p>
 
                   </div>
-
-                  {/* SUBTLE HOVER */}
 
                   <motion.div
                     initial={{
@@ -1292,8 +1322,6 @@ const LandingPage = () => {
               </motion.p>
 
             </motion.div>
-
-            {/* PROCESS */}
 
             <motion.div
               initial="hidden"
