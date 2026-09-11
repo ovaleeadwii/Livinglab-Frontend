@@ -1,23 +1,22 @@
 import React, { useState } from 'react';
 import "../index.css";
 
+import logoImg from '../assets/logo.svg';
 import pakcoyImg from '../assets/pakcoi (1).png';
 import seladaImg from '../assets/selada keriting.png';
 import bayamImg from '../assets/bayam.png';
 import tomatImg from '../assets/tomat ceri.png';
 import heroImg from '../assets/sayurr.png';
 
-function ProductCard({ item, onSelectProduct }) {
-  const [qty, setQty] = useState(0);
-
+function ProductCard({ item, qty = 0, onRequestAdd, onAddToCart, onRemoveFromCart, onSelectProduct }) {
   const handleAdd = (e) => {
     e.stopPropagation();
-    setQty(prev => prev + 1);
+    onRequestAdd(item);
   };
-  
+
   const handleMinus = (e) => {
     e.stopPropagation();
-    setQty(prev => (prev > 0 ? prev - 1 : 0));
+    onRemoveFromCart(item);
   };
 
   return (
@@ -34,7 +33,11 @@ function ProductCard({ item, onSelectProduct }) {
 
         {qty === 0 ? (
           <button className="shop-cart-btn" onClick={handleAdd} aria-label="Tambah ke keranjang">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#2f8f4e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#2f8f4e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="9" cy="21" r="1"/>
+              <circle cx="20" cy="21" r="1"/>
+              <path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/>
+            </svg>
           </button>
         ) : (
           <div className="qty-control-box" onClick={(e) => e.stopPropagation()}>
@@ -52,6 +55,12 @@ export default function ShopPage({ setPage, user }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [filterCategory, setFilterCategory] = useState("Semua");
   const [sortBy, setSortBy] = useState("terbaru");
+  const [cart, setCart] = useState({});
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [activePanel, setActivePanel] = useState(null);
+  const [pendingProduct, setPendingProduct] = useState(null);
+  const [pendingQty, setPendingQty] = useState(1);
 
   const bestSellers = [
     { 
@@ -143,15 +152,159 @@ export default function ShopPage({ setPage, user }) {
     }
   });
 
+  const addToCart = (item) => {
+    setCart((prev) => ({
+      ...prev,
+      [item.name]: {
+        ...item,
+        qty: (prev[item.name]?.qty || 0) + 1,
+      },
+    }));
+  };
+
+  const removeFromCart = (item) => {
+    setCart((prev) => {
+      const current = prev[item.name];
+      if (!current) return prev;
+
+      if (current.qty <= 1) {
+        const next = { ...prev };
+        delete next[item.name];
+        return next;
+      }
+
+      return {
+        ...prev,
+        [item.name]: {
+          ...current,
+          qty: current.qty - 1,
+        },
+      };
+    });
+  };
+
+  const requestAddToCart = (item) => {
+    setPendingProduct(item);
+    setPendingQty(1);
+  };
+
+  const confirmAddToCart = () => {
+    if (!pendingProduct || pendingQty < 1) return;
+
+    setCart((prev) => ({
+      ...prev,
+      [pendingProduct.name]: {
+        ...pendingProduct,
+        qty: (prev[pendingProduct.name]?.qty || 0) + pendingQty,
+      },
+    }));
+
+    setPendingProduct(null);
+    setPendingQty(1);
+  };
+
+  const pendingPrice = pendingProduct
+    ? parseInt(pendingProduct.price.replace(/[^0-9]/g, ""), 10) || 0
+    : 0;
+
+  const pendingTotal = pendingPrice * pendingQty;
+
+  const cartItems = Object.values(cart);
+  const cartCount = cartItems.reduce((sum, item) => sum + item.qty, 0);
+  const cartTotal = cartItems.reduce((sum, item) => {
+    const price = parseInt(item.price.replace(/[^0-9]/g, ""), 10) || 0;
+    return sum + price * item.qty;
+  }, 0);
+
+  const formatRupiah = (value) =>
+    `Rp. ${new Intl.NumberFormat("id-ID").format(value)}`;
+
+  const openPanel = (panel) => {
+    setIsMenuOpen(false);
+    setActivePanel(panel);
+  };
+
+  const handleCheckout = () => {
+    if (!cartItems.length) return;
+    setIsCartOpen(false);
+    setActivePanel("checkout");
+  };
+
   return (
     <div className="landing-container">
+      <style>{`
+        .shop-menu-btn {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          padding: 14px 15px;
+          border: 1px solid #e6eee7;
+          border-radius: 12px;
+          background: #fff;
+          color: #173524;
+          font-size: 14px;
+          font-weight: 700;
+          text-align: left;
+          cursor: pointer;
+          transition: .2s ease;
+        }
+        .shop-menu-btn:hover {
+          background: #eff8f1;
+          border-color: #cfe3d2;
+          transform: translateX(-2px);
+        }
+        .shop-menu-btn span:first-child {
+          width: 30px;
+          height: 30px;
+          border-radius: 9px;
+          background: #eef7f0;
+          color: #176137;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 13px;
+          flex-shrink: 0;
+        }
+        .cart-qty-btn {
+          width: 26px;
+          height: 26px;
+          border: 1px solid #d7e4d9;
+          border-radius: 7px;
+          background: #fff;
+          color: #176137;
+          font-weight: 800;
+          cursor: pointer;
+        }
+      `}</style>
       {/* Top bar */}
       <header className="topbar">
         <div className="logo">
-          <div className="logo-badge">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#2f8f4e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 2c-4 3-6 6-6 10a6 6 0 0 0 12 0c0-4-2-7-6-10z"/>
-            </svg>
+          <div
+            className="logo-badge"
+            style={{
+              padding: 0,
+              width: 62,
+              height: 62,
+              minWidth: 62,
+              border: "none",
+              outline: "none",
+              boxShadow: "none",
+              background: "transparent",
+              overflow: "visible",
+              borderRadius: 0,
+            }}
+          >
+            <img
+              src={logoImg}
+              alt="Agri-ICS"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "contain",
+                display: "block",
+              }}
+            />
           </div>
           <div className="logo-text">
             <div className="main">AGRI-<span>ICS</span></div>
@@ -170,36 +323,123 @@ export default function ShopPage({ setPage, user }) {
         </div>
 
         <div className="actions">
-          <div 
-            className="action-item" 
+          <div
+            className="action-item"
             onClick={() => {
               if (user) {
-                setPage('profile'); 
+                setPage("profile");
               } else {
-                setPage('auth');    
+                setPage("auth");
               }
-            }} 
-            style={{ cursor: 'pointer' }}
+            }}
+            style={{ cursor: "pointer" }}
           >
-            <div className="icon" style={user ? { overflow: 'hidden', borderRadius: '50%', width: '38px', height: '38px' } : {}}>
+            <div
+              className="icon"
+              style={
+                user
+                  ? {
+                      overflow: "hidden",
+                      borderRadius: "50%",
+                      width: "38px",
+                      height: "38px",
+                    }
+                  : {}
+              }
+            >
               {user && user.avatar ? (
-                <img src={user.avatar} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <img
+                  src={user.avatar}
+                  alt="Profile"
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
               ) : (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="8" r="4"/>
+                  <path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>
+                </svg>
               )}
             </div>
             <div className="label">
-              <small>{user ? user.role || 'Member' : 'Sign in / Register'}</small>
-              <strong>{user ? user.name : 'My Account'}</strong>
+              <small>{user ? user.role || "Member" : "Sign in / Register"}</small>
+              <strong>{user ? user.name : "My Account"}</strong>
             </div>
           </div>
 
-          <div className="action-item">
-            <div className="icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+          <button
+            type="button"
+            onClick={() => setIsCartOpen(true)}
+            aria-label="Buka keranjang"
+            style={{
+              border: "none",
+              background: "transparent",
+              padding: 0,
+              margin: 0,
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <div className="action-item" style={{ position: "relative" }}>
+              <div className="icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="9" cy="21" r="1"/>
+                  <circle cx="20" cy="21" r="1"/>
+                  <path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/>
+                </svg>
+              </div>
+              <div className="label">
+                <small>My cart</small>
+                <strong>{formatRupiah(cartTotal)}</strong>
+              </div>
+              {cartCount > 0 && (
+                <span
+                  style={{
+                    position: "absolute",
+                    top: -7,
+                    left: 28,
+                    minWidth: 21,
+                    height: 21,
+                    padding: "0 5px",
+                    borderRadius: 999,
+                    background: "#1f7a45",
+                    color: "#fff",
+                    fontSize: 11,
+                    fontWeight: 800,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    border: "2px solid #fff",
+                  }}
+                >
+                  {cartCount}
+                </span>
+              )}
             </div>
-            <div className="label"><small>My cart</small><strong>Rp.0</strong></div>
-          </div>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIsMenuOpen(true)}
+            aria-label="Buka menu"
+            style={{
+              width: 44,
+              height: 44,
+              border: "none",
+              borderRadius: 12,
+              background: "#eef7f0",
+              color: "#165c35",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              marginLeft: 2,
+            }}
+          >
+            <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <path d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+          </button>
         </div>
       </header>
 
@@ -257,7 +497,15 @@ export default function ShopPage({ setPage, user }) {
 
         <div className="best-seller-grid">
           {bestSellers.map((item, idx) => (
-            <ProductCard item={item} key={idx} onSelectProduct={setSelectedProduct} />
+            <ProductCard
+              item={item}
+              key={idx}
+              qty={cart[item.name]?.qty || 0}
+              onRequestAdd={requestAddToCart}
+              onAddToCart={addToCart}
+              onRemoveFromCart={removeFromCart}
+              onSelectProduct={setSelectedProduct}
+            />
           ))}
         </div>
       </section>
@@ -297,7 +545,15 @@ export default function ShopPage({ setPage, user }) {
 
         <div className="all-products-grid">
           {filteredProducts.map((item, idx) => (
-            <ProductCard item={item} key={idx} onSelectProduct={setSelectedProduct} />
+            <ProductCard
+              item={item}
+              key={idx}
+              qty={cart[item.name]?.qty || 0}
+              onRequestAdd={requestAddToCart}
+              onAddToCart={addToCart}
+              onRemoveFromCart={removeFromCart}
+              onSelectProduct={setSelectedProduct}
+            />
           ))}
         </div>
       </section>
@@ -339,8 +595,27 @@ export default function ShopPage({ setPage, user }) {
       <footer className="footer">
         <div className="footer-grid">
           <div className="footer-brand">
-            <div className="footer-brand-icon">
-              <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l9 7h-2v10h-5v-6H10v6H5V10H3z"/><path d="M12 9c-1.5-2-4-2-4 0 1.5 0 3 .5 4 2"/></svg>
+            <div
+              className="footer-brand-icon"
+              style={{
+                padding: 0,
+                border: "none",
+                outline: "none",
+                boxShadow: "none",
+                background: "transparent",
+                overflow: "visible",
+              }}
+            >
+              <img
+                src={logoImg}
+                alt="Agri-ICS"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "contain",
+                  display: "block",
+                }}
+              />
             </div>
             <div>
               <div className="name">AGRI-ICS</div>
@@ -378,6 +653,496 @@ export default function ShopPage({ setPage, user }) {
           </div>
         </div>
       </footer>
+
+      {/* DRAWER MENU */}
+      {isMenuOpen && (
+        <div
+          onClick={() => setIsMenuOpen(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 9998,
+            background: "rgba(15, 35, 23, 0.32)",
+          }}
+        >
+          <aside
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              width: "min(360px, 88vw)",
+              height: "100%",
+              background: "#fff",
+              boxShadow: "-12px 0 35px rgba(0,0,0,.15)",
+              padding: 24,
+              overflowY: "auto",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+              <div>
+                <div style={{ fontSize: 12, color: "#6d7b72" }}>AGRI-ICS</div>
+                <h3 style={{ margin: "3px 0 0", color: "#173524", fontSize: 22 }}>Menu</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsMenuOpen(false)}
+                style={{
+                  width: 38,
+                  height: 38,
+                  borderRadius: "50%",
+                  border: "1px solid #e1e8e2",
+                  background: "#fff",
+                  cursor: "pointer",
+                  fontSize: 22,
+                  color: "#526158",
+                }}
+              >
+                ×
+              </button>
+            </div>
+
+            <div style={{ display: "grid", gap: 10 }}>
+              <button className="shop-menu-btn" onClick={() => setPage("home")}>
+                <span>⌂</span><span>Home</span>
+              </button>
+              <button className="shop-menu-btn" onClick={() => setPage("dashboard")}>
+                <span>▦</span><span>Dashboard</span>
+              </button>
+              <button className="shop-menu-btn" onClick={() => openPanel("saldo")}>
+                <span>Rp</span><span>Saldo Saya</span>
+              </button>
+              <button className="shop-menu-btn" onClick={() => openPanel("orders")}>
+                <span>▤</span><span>Pesanan Saya</span>
+              </button>
+              <button className="shop-menu-btn" onClick={() => { setIsMenuOpen(false); setIsCartOpen(true); }}>
+                <span>🛒</span><span>Keranjang ({cartCount})</span>
+              </button>
+            </div>
+          </aside>
+        </div>
+      )}
+
+      {/* DRAWER KERANJANG */}
+      {isCartOpen && (
+        <div
+          onClick={() => setIsCartOpen(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 9997,
+            background: "rgba(15, 35, 23, 0.32)",
+          }}
+        >
+          <aside
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              width: "min(440px, 94vw)",
+              height: "100%",
+              background: "#fff",
+              boxShadow: "-12px 0 35px rgba(0,0,0,.15)",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <div style={{ padding: "22px 24px", borderBottom: "1px solid #e9eee9", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div>
+                <div style={{ fontSize: 12, color: "#6d7b72" }}>BELANJA</div>
+                <h3 style={{ margin: "3px 0 0", color: "#173524", fontSize: 22 }}>Keranjang Saya</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsCartOpen(false)}
+                style={{ border: "none", background: "transparent", fontSize: 27, cursor: "pointer", color: "#526158" }}
+              >
+                ×
+              </button>
+            </div>
+
+            <div style={{ flex: 1, overflowY: "auto", padding: 20 }}>
+              {!cartItems.length ? (
+                <div style={{ textAlign: "center", padding: "70px 20px", color: "#68756c" }}>
+                  <div style={{ fontSize: 48, marginBottom: 12 }}>🛒</div>
+                  <strong style={{ display: "block", color: "#173524", marginBottom: 6 }}>Keranjang masih kosong</strong>
+                  <span>Tambahkan produk untuk melanjutkan checkout.</span>
+                </div>
+              ) : (
+                <div style={{ display: "grid", gap: 14 }}>
+                  {cartItems.map((item) => {
+                    const price = parseInt(item.price.replace(/[^0-9]/g, ""), 10) || 0;
+                    return (
+                      <div
+                        key={item.name}
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: "64px 1fr auto",
+                          gap: 12,
+                          alignItems: "center",
+                          padding: 12,
+                          border: "1px solid #e7eee8",
+                          borderRadius: 14,
+                        }}
+                      >
+                        <div style={{ width: 64, height: 64, borderRadius: 12, background: "#f5f8f5", overflow: "hidden" }}>
+                          <img src={item.img} alt={item.name} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+                        </div>
+
+                        <div>
+                          <strong style={{ display: "block", color: "#173524", fontSize: 14 }}>{item.name}</strong>
+                          <span style={{ display: "block", color: "#718076", fontSize: 12, margin: "3px 0 8px" }}>{item.price}</span>
+                          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                            <button className="cart-qty-btn" onClick={() => removeFromCart(item)}>−</button>
+                            <strong style={{ minWidth: 18, textAlign: "center" }}>{item.qty}</strong>
+                            <button className="cart-qty-btn" onClick={() => addToCart(item)}>+</button>
+                          </div>
+                        </div>
+
+                        <strong style={{ color: "#1b6d3e", fontSize: 13 }}>
+                          {formatRupiah(price * item.qty)}
+                        </strong>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {cartItems.length > 0 && (
+              <div style={{ padding: 20, borderTop: "1px solid #e9eee9", background: "#fbfdfb" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 7, color: "#657168" }}>
+                  <span>Total item</span><span>{cartCount} item</span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16, color: "#173524", fontSize: 18 }}>
+                  <strong>Total</strong><strong>{formatRupiah(cartTotal)}</strong>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleCheckout}
+                  style={{
+                    width: "100%",
+                    border: "none",
+                    borderRadius: 12,
+                    padding: "13px 16px",
+                    background: "#176137",
+                    color: "#fff",
+                    fontWeight: 800,
+                    cursor: "pointer",
+                  }}
+                >
+                  Lanjut ke Checkout
+                </button>
+              </div>
+            )}
+          </aside>
+        </div>
+      )}
+
+      {/* PANEL SALDO / PESANAN / CHECKOUT */}
+      {activePanel && (
+        <div
+          onClick={() => setActivePanel(null)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 9999,
+            background: "rgba(15, 35, 23, 0.38)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 20,
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: "min(520px, 94vw)",
+              maxHeight: "88vh",
+              overflowY: "auto",
+              background: "#fff",
+              borderRadius: 20,
+              padding: 26,
+              boxShadow: "0 20px 60px rgba(0,0,0,.18)",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
+              <h3 style={{ margin: 0, color: "#173524", fontSize: 22 }}>
+                {activePanel === "saldo" && "Saldo Saya"}
+                {activePanel === "orders" && "Pesanan Saya"}
+                {activePanel === "checkout" && "Checkout"}
+              </h3>
+              <button
+                type="button"
+                onClick={() => setActivePanel(null)}
+                style={{ border: "none", background: "transparent", fontSize: 26, cursor: "pointer" }}
+              >
+                ×
+              </button>
+            </div>
+
+            {activePanel === "saldo" && (
+              <div>
+                <div style={{ padding: 20, borderRadius: 16, background: "#eff8f1", marginBottom: 16 }}>
+                  <div style={{ color: "#6a786e", fontSize: 13 }}>Saldo tersedia</div>
+                  <div style={{ color: "#176137", fontSize: 30, fontWeight: 800, marginTop: 4 }}>Rp. 0</div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setActivePanel(null)}
+                  style={{ width: "100%", padding: 12, borderRadius: 11, border: "1px solid #176137", background: "#fff", color: "#176137", fontWeight: 700, cursor: "pointer" }}
+                >
+                  Tutup
+                </button>
+              </div>
+            )}
+
+            {activePanel === "orders" && (
+              <div style={{ textAlign: "center", padding: "30px 10px", color: "#68756c" }}>
+                <div style={{ fontSize: 42, marginBottom: 10 }}>📦</div>
+                <strong style={{ display: "block", color: "#173524", marginBottom: 6 }}>Belum ada pesanan</strong>
+                <span>Pesanan yang sudah checkout akan muncul di sini.</span>
+              </div>
+            )}
+
+            {activePanel === "checkout" && (
+              <div>
+                <div style={{ display: "grid", gap: 10, marginBottom: 18 }}>
+                  {cartItems.map((item) => (
+                    <div key={item.name} style={{ display: "flex", justifyContent: "space-between", gap: 12, paddingBottom: 10, borderBottom: "1px solid #edf1ed" }}>
+                      <span>{item.name} × {item.qty}</span>
+                      <strong>{formatRupiah((parseInt(item.price.replace(/[^0-9]/g, ""), 10) || 0) * item.qty)}</strong>
+                    </div>
+                  ))}
+                </div>
+
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 18, color: "#173524", marginBottom: 18 }}>
+                  <strong>Total Pembayaran</strong>
+                  <strong>{formatRupiah(cartTotal)}</strong>
+                </div>
+
+                <div style={{ display: "grid", gap: 10 }}>
+                  <input
+                    placeholder="Alamat pengiriman"
+                    style={{ width: "100%", boxSizing: "border-box", padding: 12, border: "1px solid #dce5de", borderRadius: 10 }}
+                  />
+                  <select style={{ width: "100%", padding: 12, border: "1px solid #dce5de", borderRadius: 10, background: "#fff" }}>
+                    <option>Pilih metode pembayaran</option>
+                    <option>Saldo AGRI-ICS</option>
+                    <option>Transfer Bank</option>
+                    <option>QRIS</option>
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCart({});
+                      setActivePanel("orders");
+                    }}
+                    style={{
+                      width: "100%",
+                      padding: 13,
+                      border: "none",
+                      borderRadius: 11,
+                      background: "#176137",
+                      color: "#fff",
+                      fontWeight: 800,
+                      cursor: "pointer",
+                    }}
+                  >
+                    Buat Pesanan
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* MODAL KONFIRMASI TAMBAH KE KERANJANG */}
+      {pendingProduct && (
+        <div
+          onClick={() => {
+            setPendingProduct(null);
+            setPendingQty(1);
+          }}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 10000,
+            background: "rgba(15, 35, 23, 0.42)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 20,
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: "min(470px, 94vw)",
+              background: "#fff",
+              borderRadius: 22,
+              padding: 24,
+              boxShadow: "0 24px 70px rgba(0,0,0,.20)",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
+              <div>
+                <div style={{ fontSize: 12, color: "#6d7b72", letterSpacing: ".08em", fontWeight: 700 }}>
+                  TAMBAH KE KERANJANG
+                </div>
+                <h3 style={{ margin: "5px 0 0", color: "#173524", fontSize: 22 }}>
+                  Konfirmasi Produk
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setPendingProduct(null);
+                  setPendingQty(1);
+                }}
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: "50%",
+                  border: "1px solid #e1e8e2",
+                  background: "#fff",
+                  color: "#526158",
+                  fontSize: 22,
+                  cursor: "pointer",
+                }}
+              >
+                ×
+              </button>
+            </div>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "82px 1fr",
+                gap: 14,
+                alignItems: "center",
+                padding: 14,
+                border: "1px solid #e5eee7",
+                borderRadius: 16,
+                background: "#fbfdfb",
+              }}
+            >
+              <div
+                style={{
+                  width: 82,
+                  height: 82,
+                  borderRadius: 14,
+                  background: "#f4f8f4",
+                  overflow: "hidden",
+                }}
+              >
+                <img
+                  src={pendingProduct.img}
+                  alt={pendingProduct.name}
+                  style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                />
+              </div>
+
+              <div>
+                <strong style={{ display: "block", color: "#173524", fontSize: 17 }}>
+                  {pendingProduct.name}
+                </strong>
+                <span style={{ display: "block", color: "#718076", fontSize: 13, marginTop: 4 }}>
+                  {pendingProduct.category}
+                </span>
+                <strong style={{ display: "block", color: "#176137", fontSize: 16, marginTop: 7 }}>
+                  {pendingProduct.price}
+                </strong>
+              </div>
+            </div>
+
+            <div
+              style={{
+                marginTop: 18,
+                padding: 15,
+                borderRadius: 14,
+                background: "#eff8f1",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span style={{ color: "#536158", fontWeight: 600 }}>Jumlah</span>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <button
+                    type="button"
+                    className="cart-qty-btn"
+                    onClick={() => setPendingQty((q) => Math.max(1, q - 1))}
+                  >
+                    −
+                  </button>
+                  <strong style={{ minWidth: 24, textAlign: "center", color: "#173524", fontSize: 16 }}>
+                    {pendingQty}
+                  </strong>
+                  <button
+                    type="button"
+                    className="cart-qty-btn"
+                    onClick={() => setPendingQty((q) => q + 1)}
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginTop: 14,
+                  paddingTop: 14,
+                  borderTop: "1px solid #dbe8de",
+                }}
+              >
+                <span style={{ color: "#536158", fontWeight: 600 }}>Total</span>
+                <strong style={{ color: "#176137", fontSize: 20 }}>
+                  {formatRupiah(pendingTotal)}
+                </strong>
+              </div>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1.5fr", gap: 10, marginTop: 18 }}>
+              <button
+                type="button"
+                onClick={() => {
+                  setPendingProduct(null);
+                  setPendingQty(1);
+                }}
+                style={{
+                  border: "1px solid #d7e4d9",
+                  borderRadius: 12,
+                  padding: "13px 16px",
+                  background: "#fff",
+                  color: "#526158",
+                  fontWeight: 800,
+                  cursor: "pointer",
+                }}
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                onClick={confirmAddToCart}
+                style={{
+                  border: "none",
+                  borderRadius: 12,
+                  padding: "13px 16px",
+                  background: "#176137",
+                  color: "#fff",
+                  fontWeight: 800,
+                  cursor: "pointer",
+                }}
+              >
+                Konfirmasi &amp; Tambah ke Keranjang
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* MODAL SPESIFIKASI PRODUK */}
       {selectedProduct && (
