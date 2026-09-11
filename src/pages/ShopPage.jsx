@@ -1067,15 +1067,7 @@ export default function ShopPage({ setPage, user }) {
         </div>
       </header>
 
-      {/* Area Pemicu Navbar Perbatasan */}
-      <div className="navbar-trigger-area">
-        <nav className="navbar">
-          <a href="#home" onClick={(e) => { e.preventDefault(); setPage('home'); }}>Home</a>
-          <a href="#shop" onClick={(e) => { e.preventDefault(); setPage('shop'); }} className="active">Shop</a>
-          <a href="#dashboard" onClick={(e) => { e.preventDefault(); setPage('dashboard'); }}>Dashboard</a>
-        </nav>
-      </div>
-
+      
       {/* Hero / Banner Shop */}
       <section className="hero shop-landing-hero">
         <div className="hero-content">

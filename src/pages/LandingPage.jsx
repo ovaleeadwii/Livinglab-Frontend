@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import "../index.css";
 
 import logoImg from "../assets/logo.svg";
+import landsBg from "../assets/lands.jpg";
 import heroImg from "../assets/yang baru lagi.png";
 import pakcoyImg from "../assets/pakcoi (1).png";
 import seladaImg from "../assets/selada keriting.png";
@@ -964,63 +965,10 @@ export default function LandingPage({ setPage, user }) {
       </motion.header>
 
       {/* =====================================================
-          SECONDARY NAVBAR
-      ===================================================== */}
-
-      <div className="navbar-trigger-area">
-        <motion.nav
-          initial={{
-            opacity: 0,
-            y: -8,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-          transition={{
-            duration: 0.5,
-            delay: 0.12,
-          }}
-          className="navbar"
-        >
-          <a
-            href="#home"
-            onClick={(e) => {
-              e.preventDefault();
-              setPage("home");
-            }}
-            className="active"
-          >
-            Home
-          </a>
-
-          <a
-            href="#shop"
-            onClick={(e) => {
-              e.preventDefault();
-              handleMarketplace();
-            }}
-          >
-            Shop
-          </a>
-
-          <a
-            href="#dashboard"
-            onClick={(e) => {
-              e.preventDefault();
-              setPage("dashboard");
-            }}
-          >
-            Dashboard
-          </a>
-        </motion.nav>
-      </div>
-
-      {/* =====================================================
           HERO
       ===================================================== */}
 
-      <section className="hero">
+      <section className="hero" style={{ backgroundImage: `url(${landsBg})` }}>
 
         <motion.div
           initial="hidden"
@@ -1441,97 +1389,93 @@ export default function LandingPage({ setPage, user }) {
 
           <div className="carousel-track">
             {productsList.map((prod, idx) => {
-              let position =
-                "carousel-item-hidden";
+  let xPos = 0;
+  let scaleVal = 0.7;
+  let opacityVal = 0;
+  let pointerEventsVal = "none";
+  let zIndexVal = 1;
 
-              if (idx === activeIndex) {
-                position =
-                  "carousel-item-active";
-              } else if (
-                idx ===
-                (activeIndex -
-                  1 +
-                  productsList.length) %
-                  productsList.length
-              ) {
-                position =
-                  "carousel-item-left";
-              } else if (
-                idx ===
-                (activeIndex + 1) %
-                  productsList.length
-              ) {
-                position =
-                  "carousel-item-right";
-              }
+  if (idx === activeIndex) {
+    xPos = 0;
+    scaleVal = 1.05;
+    opacityVal = 1;
+    pointerEventsVal = "auto";
+    zIndexVal = 30;
+  } else if (
+    idx ===
+    (activeIndex - 1 + productsList.length) % productsList.length
+  ) {
+    xPos = -220;
+    scaleVal = 0.85;
+    opacityVal = 0.7;
+    pointerEventsVal = "auto";
+    zIndexVal = 20;
+  } else if (
+    idx === (activeIndex + 1) % productsList.length
+  ) {
+    xPos = 220;
+    scaleVal = 0.85;
+    opacityVal = 0.7;
+    pointerEventsVal = "auto";
+    zIndexVal = 20;
+  }
 
-              return (
-                <motion.div
-                  className={`product-card-3d ${position}`}
-                  key={idx}
-                  onClick={() =>
-                    setActiveIndex(idx)
-                  }
-                  whileHover={{
-                    y: -5,
-                  }}
-                >
-                  <div className="product-photo">
-                    <img
-                      src={prod.img}
-                      alt={prod.name}
-                    />
-                  </div>
+  return (
+    <motion.div
+      className="product-card-3d"
+      key={idx}
+      onClick={() => setActiveIndex(idx)}
+      initial={false}
+      animate={{
+        x: xPos,
+        scale: scaleVal,
+        opacity: opacityVal,
+      }}
+      transition={{
+        type: "spring",
+        stiffness: 300,
+        damping: 30,
+      }}
+      style={{
+        position: "absolute",
+        zIndex: zIndexVal,
+        pointerEvents: pointerEventsVal,
+        cursor: "pointer",
+      }}
+      whileHover={{ y: -5 }}
+    >
+      <div className="product-photo">
+        <img src={prod.img} alt={prod.name} />
+      </div>
 
-                  <div className="product-info">
+      <div className="product-info">
+        <div>
+          <div className="name">{prod.name}</div>
+          <div className="price">{prod.price}</div>
+        </div>
 
-                    <div>
-                      <div className="name">
-                        {prod.name}
-                      </div>
-
-                      <div className="price">
-                        {prod.price}
-                      </div>
-                    </div>
-
-                    <motion.button
-                      className="cart-btn"
-                      aria-label="Tambah ke keranjang"
-                      whileHover={{
-                        scale: 1.06,
-                      }}
-                      whileTap={{
-                        scale: 0.94,
-                      }}
-                    >
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <circle
-                          cx="9"
-                          cy="21"
-                          r="1"
-                        />
-
-                        <circle
-                          cx="20"
-                          cy="21"
-                          r="1"
-                        />
-
-                        <path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6" />
-                      </svg>
-                    </motion.button>
-
-                  </div>
-                </motion.div>
-              );
-            })}
+        <motion.button
+          className="cart-btn"
+          aria-label="Tambah ke keranjang"
+          whileHover={{ scale: 1.06 }}
+          whileTap={{ scale: 0.94 }}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="9" cy="21" r="1" />
+            <circle cx="20" cy="21" r="1" />
+            <path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6" />
+          </svg>
+        </motion.button>
+      </div>
+    </motion.div>
+  );
+})}
           </div>
 
           <div className="carousel-nav-buttons">
