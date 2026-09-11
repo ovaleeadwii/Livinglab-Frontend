@@ -147,6 +147,506 @@ export default function LandingPage({ setPage, user }) {
 
   return (
     <div className="relative min-h-screen overflow-x-hidden">
+      <style>{`
+        /* =====================================================
+           RESPONSIVE / CROSS DEVICE
+           HP • TABLET • LAPTOP • MAC • DESKTOP
+        ===================================================== */
+        .landing-container,
+        .landing-container * {
+          box-sizing: border-box;
+        }
+
+        .landing-container {
+          width: 100%;
+          max-width: 100%;
+          overflow-x: hidden;
+        }
+
+        .landing-container img {
+          max-width: 100%;
+        }
+
+        /* Laptop kecil / tablet landscape */
+        @media (max-width: 1180px) {
+          .topbar {
+            gap: 14px !important;
+            padding-left: 28px !important;
+            padding-right: 28px !important;
+          }
+
+          .search {
+            min-width: 0 !important;
+            flex: 1 1 360px !important;
+          }
+
+          .topbar > div:last-child {
+            margin-left: 0 !important;
+          }
+
+          .hero {
+            padding-left: 6vw !important;
+            padding-right: 6vw !important;
+            gap: 28px !important;
+          }
+
+          .hero-content h1 {
+            font-size: clamp(34px, 4vw, 54px) !important;
+            line-height: 1.08 !important;
+          }
+
+          .features,
+          .products-carousel-section,
+          .highlights-section,
+          .footer {
+            padding-left: 6vw !important;
+            padding-right: 6vw !important;
+          }
+
+          .footer-grid {
+            grid-template-columns: 1.5fr repeat(2, 1fr) !important;
+            row-gap: 30px !important;
+          }
+        }
+
+        /* Tablet */
+        @media (max-width: 900px) {
+          .topbar {
+            min-height: auto !important;
+            flex-wrap: wrap !important;
+            padding: 14px 24px !important;
+          }
+
+          .topbar .logo {
+            flex: 1 1 auto !important;
+            min-width: 220px !important;
+          }
+
+          .topbar .search {
+            order: 3;
+            flex: 1 1 100% !important;
+            width: 100% !important;
+            margin-top: 2px !important;
+          }
+
+          .topbar > div:last-child {
+            margin-left: auto !important;
+          }
+
+          .navbar-trigger-area {
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch;
+          }
+
+          .navbar {
+            width: max-content !important;
+            min-width: 100% !important;
+            justify-content: center !important;
+            padding-left: 20px !important;
+            padding-right: 20px !important;
+          }
+
+          .hero {
+            min-height: auto !important;
+            grid-template-columns: 1fr !important;
+            display: grid !important;
+            padding: 56px 7vw 48px !important;
+            text-align: center !important;
+          }
+
+          .hero-content {
+            max-width: 760px !important;
+            margin: 0 auto !important;
+          }
+
+          .hero-content > div:first-child {
+            margin-left: auto !important;
+            margin-right: auto !important;
+          }
+
+          .hero-buttons {
+            justify-content: center !important;
+            flex-wrap: wrap !important;
+          }
+
+          .hero-visual {
+            width: min(620px, 100%) !important;
+            min-height: 360px !important;
+            margin: 0 auto !important;
+          }
+
+          .basket {
+            width: min(100%, 600px) !important;
+            margin: auto !important;
+          }
+
+          .features-row {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+          }
+
+          .features-row .feature-item:last-child {
+            grid-column: 1 / -1;
+            max-width: calc(50% - 12px);
+            width: 100%;
+            margin: 0 auto;
+          }
+
+          .stats-slim-bar {
+            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+          }
+
+          .footer-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+          }
+
+          .footer-brand {
+            grid-column: 1 / -1;
+          }
+        }
+
+        /* HP */
+        @media (max-width: 600px) {
+          .topbar {
+            padding: 11px 15px !important;
+            gap: 10px !important;
+          }
+
+          .topbar .logo {
+            min-width: 0 !important;
+            width: auto !important;
+          }
+
+          .topbar .logo-badge {
+            width: 46px !important;
+            height: 46px !important;
+            min-width: 46px !important;
+          }
+
+          .topbar .logo-text {
+            margin-left: 8px !important;
+          }
+
+          .topbar .logo-text .main {
+            font-size: 20px !important;
+            line-height: 1 !important;
+          }
+
+          .topbar .logo-text .tag {
+            display: none !important;
+          }
+
+          .topbar > div:last-child {
+            gap: 6px !important;
+          }
+
+          .topbar > div:last-child button {
+            height: 38px !important;
+            padding: 0 10px !important;
+            border-radius: 9px !important;
+            font-size: 12px !important;
+          }
+
+          .topbar > div:last-child button svg {
+            width: 15px !important;
+            height: 15px !important;
+          }
+
+          .search {
+            height: 44px !important;
+            border-radius: 10px !important;
+          }
+
+          .search input {
+            min-width: 0 !important;
+            width: 100% !important;
+            font-size: 13px !important;
+            padding-left: 13px !important;
+          }
+
+          .search .cat {
+            display: none !important;
+          }
+
+          .search button {
+            width: 46px !important;
+            min-width: 46px !important;
+          }
+
+          .navbar {
+            justify-content: flex-start !important;
+            gap: 4px !important;
+            padding: 0 15px !important;
+          }
+
+          .navbar a {
+            padding: 12px 15px !important;
+            white-space: nowrap !important;
+            font-size: 13px !important;
+          }
+
+          .hero {
+            padding: 40px 18px 30px !important;
+            gap: 12px !important;
+          }
+
+          .hero-content h1 {
+            font-size: clamp(30px, 9vw, 42px) !important;
+            line-height: 1.06 !important;
+            word-break: normal !important;
+          }
+
+          .hero-content p {
+            font-size: 14px !important;
+            line-height: 1.7 !important;
+            max-width: 100% !important;
+          }
+
+          .hero-content > div:first-child {
+            font-size: 9px !important;
+            letter-spacing: 0.03em !important;
+            padding: 6px 10px !important;
+          }
+
+          .hero-buttons {
+            width: 100% !important;
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+            gap: 9px !important;
+          }
+
+          .hero-buttons .btn {
+            width: 100% !important;
+            min-height: 44px !important;
+            justify-content: center !important;
+          }
+
+          .hero-visual {
+            min-height: 260px !important;
+            margin-top: 8px !important;
+          }
+
+          .floating-img {
+            width: 100% !important;
+            max-width: 430px !important;
+            height: auto !important;
+          }
+
+          .features,
+          .products-carousel-section,
+          .highlights-section,
+          .footer {
+            padding-left: 18px !important;
+            padding-right: 18px !important;
+          }
+
+          .features {
+            padding-top: 48px !important;
+            padding-bottom: 48px !important;
+          }
+
+          .features-head h2,
+          .products-head-center h2 {
+            font-size: 28px !important;
+          }
+
+          .features-head p,
+          .products-head-center p {
+            font-size: 13px !important;
+            line-height: 1.65 !important;
+          }
+
+          .features-row {
+            grid-template-columns: 1fr !important;
+            gap: 12px !important;
+          }
+
+          .features-row .feature-item:last-child {
+            grid-column: auto !important;
+            max-width: none !important;
+          }
+
+          .feature-item {
+            padding: 20px !important;
+          }
+
+          .feature-item h3 {
+            font-size: 17px !important;
+          }
+
+          .feature-item p {
+            font-size: 13px !important;
+            line-height: 1.65 !important;
+          }
+
+          .products-carousel-section {
+            padding-top: 48px !important;
+            padding-bottom: 48px !important;
+          }
+
+          /*
+            Di HP hanya kartu aktif yang ditampilkan.
+            Ini membuat carousel stabil dan tidak melebar keluar layar.
+          */
+          .carousel-container {
+            width: 100% !important;
+            overflow: hidden !important;
+          }
+
+          .carousel-track {
+            width: 100% !important;
+            min-height: 0 !important;
+            height: auto !important;
+            display: block !important;
+          }
+
+          .product-card-3d {
+            display: none !important;
+            position: relative !important;
+            left: auto !important;
+            right: auto !important;
+            top: auto !important;
+            transform: none !important;
+            width: 100% !important;
+            max-width: 390px !important;
+            margin: 0 auto !important;
+          }
+
+          .product-card-3d.carousel-item-active {
+            display: block !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+          }
+
+          .product-photo {
+            height: 230px !important;
+          }
+
+          .product-info {
+            padding: 15px !important;
+          }
+
+          .carousel-nav-buttons {
+            margin-top: 16px !important;
+            gap: 10px !important;
+          }
+
+          .carousel-arrow {
+            width: 42px !important;
+            height: 42px !important;
+          }
+
+          .stats-slim-bar {
+            grid-template-columns: 1fr !important;
+            gap: 15px !important;
+            padding: 20px !important;
+          }
+
+          .stat-divider {
+            width: 100% !important;
+            height: 1px !important;
+          }
+
+          .stat-slim-item strong {
+            font-size: 25px !important;
+          }
+
+          .testimonial-slim-bar {
+            margin-top: 12px !important;
+          }
+
+          .testimonial-slim-content {
+            padding: 18px !important;
+            align-items: flex-start !important;
+          }
+
+          .slim-avatar {
+            width: 42px !important;
+            height: 42px !important;
+            min-width: 42px !important;
+          }
+
+          .testimonial-slim-content p {
+            font-size: 13px !important;
+            line-height: 1.6 !important;
+          }
+
+          .footer {
+            padding-top: 42px !important;
+            padding-bottom: 24px !important;
+          }
+
+          .footer-grid {
+            grid-template-columns: 1fr !important;
+            gap: 28px !important;
+          }
+
+          .footer-brand {
+            grid-column: auto !important;
+            align-items: flex-start !important;
+          }
+
+          .footer-brand-icon {
+            width: 52px !important;
+            height: 52px !important;
+            min-width: 52px !important;
+          }
+
+          .footer-col h4 {
+            margin-bottom: 10px !important;
+          }
+
+          /* Intro */
+          .landing-container + * {
+            max-width: 100vw;
+          }
+        }
+
+        /* HP sangat kecil */
+        @media (max-width: 380px) {
+          .topbar .logo-text .main {
+            font-size: 18px !important;
+          }
+
+          .topbar > div:last-child button {
+            padding: 0 8px !important;
+            font-size: 11px !important;
+          }
+
+          .hero {
+            padding-left: 14px !important;
+            padding-right: 14px !important;
+          }
+
+          .hero-content h1 {
+            font-size: 29px !important;
+          }
+
+          .features,
+          .products-carousel-section,
+          .highlights-section,
+          .footer {
+            padding-left: 14px !important;
+            padding-right: 14px !important;
+          }
+        }
+
+        /* Mac/desktop dengan pointer */
+        @media (min-width: 901px) and (hover: hover) {
+          .landing-container {
+            overflow-x: clip;
+          }
+        }
+
+        /* Kurangi animasi jika device meminta reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+          .landing-container *,
+          .landing-container *::before,
+          .landing-container *::after {
+            scroll-behavior: auto !important;
+          }
+        }
+`}</style>
+
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{
