@@ -1531,7 +1531,81 @@ export default function LandingPage({ setPage, user }) {
           </div>
         </div>
       </section>
+      
+      {/* =====================================================
+          MAPS / LOKASI GREENHOUSE
+      ===================================================== */}
+      <section className="maps-section">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={stagger} className="maps-head-center">
+          <motion.span variants={fadeUp} className="sub-title">LOKASI KEBUN</motion.span>
+          <motion.h2 variants={fadeUp}>Greenhouse & LivingLab Gisting</motion.h2>
+          <motion.p variants={fadeUp}>Kunjungi langsung pusat budidaya hidroponik kami di Kabupaten Tanggamus, Lampung.</motion.p>
+        </motion.div>
 
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          className="maps-wrapper"
+        >
+          {/* Peta Google Maps */}
+          <div className="map-container">
+            <iframe
+              title="Peta Lokasi Greenhouse Gisting"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15879.88!2d104.70!3d-5.38!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMjInMzMuMiJTIDEwNMKwNDInMDAuMCJF!5e0!3m2!1sid!2sid!4v1600000000000!5m2!1sid!2sid"
+              allowFullScreen=""
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
+
+          {/* Panel Informasi */}
+          <div className="map-info-panel">
+            <div className="map-info-card">
+              <h3>Pusat Budidaya Utama</h3>
+              <p>Terintegrasi dengan sistem pemantauan IoT dan otomatisasi iklim mikro secara langsung.</p>
+
+              <div className="map-meta-list">
+                <div className="map-meta-item">
+                  <div className="map-meta-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  </div>
+                  <span>Kec. Gisting, Kab. Tanggamus, Lampung</span>
+                </div>
+
+                <div className="map-meta-item">
+                  <div className="map-meta-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  </div>
+                  <span>Buka Setiap Hari: 08.00 - 17.00 WIB</span>
+                </div>
+
+                <div className="map-meta-item">
+                  <div className="map-meta-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                  </div>
+                  <span>5 Greenhouse Aktif & Terhubung IoT</span>
+                </div>
+              </div>
+            </div>
+
+            <motion.a
+              href="https://maps.google.com/?q=Gisting,+Tanggamus+Regency,+Lampung"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="map-direction-btn"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <span>Buka Google Maps</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </motion.a>
+          </div>
+        </motion.div>
+      </section>
+
+      
       {/* =====================================================
           STATS
       ===================================================== */}

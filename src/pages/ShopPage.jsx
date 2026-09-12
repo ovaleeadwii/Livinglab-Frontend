@@ -6,7 +6,16 @@ import pakcoyImg from '../assets/pakcoi (1).png';
 import seladaImg from '../assets/selada keriting.png';
 import bayamImg from '../assets/bayam.png';
 import tomatImg from '../assets/tomat ceri.png';
-import heroImg from '../assets/sayurr.png';
+import heroImg from '../assets/sayurann.png';
+import netpotImg from '../assets/netpot.png';
+import ABMIXImg from '../assets/ab mix.jpg';
+import rockwoolImg from '../assets/Rockwool cubes.jpg';
+import sekamImg from '../assets/sekam bakar.jpg';
+import abmixsayurImg from '../assets/ab mix sayur daun.jpg';
+import abmixbuahImg from '../assets/ab mix buah.jpg';
+import benihseladaImg from '../assets/benih selada.jpg';
+import benihtomatImg from '../assets/benih tomat ceri.jpg';
+import benihpakcoyImg from '../assets/benih pakcoy.jpg';
 
 function ProductCard({ item, qty = 0, onRequestAdd, onAddToCart, onRemoveFromCart, onSelectProduct }) {
   const handleAdd = (e) => {
@@ -78,11 +87,11 @@ export default function ShopPage({ setPage, user }) {
       name: "Rockwool cubes", 
       category: "Media Tanam", 
       price: "Rp. 35.000", 
-      img: seladaImg,
-      plantedDate: "N/A",
-      harvestDate: "N/A",
-      duration: "Siap Pakai",
-      greenhouse: "Gudang Logistik",
+      img: rockwoolImg,
+      spec1: "Kapasitas Serap Tinggi", 
+      spec2: "Bersertifikasi SNI", 
+      spec3: "Siap Pakai / Potong", 
+      spec4: "Gudang Logistik",
       description: "Media tanam rockwool berkualitas tinggi dengan kapasitas serap air optimal."
     },
     { 
@@ -100,22 +109,22 @@ export default function ShopPage({ setPage, user }) {
       name: "Netpot", 
       category: "Media Tanam", 
       price: "Rp. 5.000", 
-      img: tomatImg,
-      plantedDate: "N/A",
-      harvestDate: "N/A",
-      duration: "Awet & Tahan Lama",
-      greenhouse: "Gudang Logistik",
+      img: netpotImg,
+      spec1: "Plastik HDPE Berkualitas", 
+      spec2: "Food Grade & Certified", 
+      spec3: "Tahan Sinar UV", 
+      spec4: "Gudang Logistik",
       description: "Netpot hitam bertingkat ukuran standar untuk sirkulasi akar."
     },
     { 
       name: "AB MIX", 
       category: "Nutrisi", 
       price: "Rp. 75.000", 
-      img: pakcoyImg,
-      plantedDate: "N/A",
-      harvestDate: "N/A",
-      duration: "Formula Premium",
-      greenhouse: "Laboratorium Nutrisi",
+      img: ABMIXImg,
+      spec1: "Larut 100% Tanpa Endapan", 
+      spec2: "Formula Lab Teruji", 
+      spec3: "Pekatan Cair 1 Liter", 
+      spec4: "Lab Nutrisi",
       description: "Nutrisi hidroponik lengkap unsur hara makro dan mikro."
     },
   ];
@@ -125,17 +134,97 @@ export default function ShopPage({ setPage, user }) {
     { name: "Selada keriting", category: "Sayuran", price: "Rp. 18.000", img: seladaImg, plantedDate: "12 Mei 2026", harvestDate: "8 Juni 2026", duration: "30 Hari", greenhouse: "GH-02", description: "Selada keriting renyah." },
     { name: "Bayam", category: "Sayuran", price: "Rp. 9.000", img: bayamImg, plantedDate: "15 Mei 2026", harvestDate: "5 Juni 2026", duration: "21 Hari", greenhouse: "GH-02", description: "Bayam hijau segar." },
     { name: "Tomat Ceri", category: "Sayuran", price: "Rp. 17.000", img: tomatImg, plantedDate: "1 April 2026", harvestDate: "1 Juni 2026", duration: "60 Hari", greenhouse: "GH-03", description: "Tomat ceri manis bernutrisi." },
-    { name: "Rockwool cubes", category: "Media Tanam", price: "Rp. 35.000", img: seladaImg, plantedDate: "N/A", harvestDate: "N/A", duration: "Siap Pakai", greenhouse: "Gudang Logistik", description: "Media tanam rockwool." },
-    { name: "Netpot Hidroponik", category: "Media Tanam", price: "Rp. 5.000", img: tomatImg, plantedDate: "N/A", harvestDate: "N/A", duration: "Awet", greenhouse: "Gudang Logistik", description: "Netpot hitam berkualitas." },
-    { name: "Sekam Bakar", category: "Media Tanam", price: "Rp. 12.000", img: bayamImg, plantedDate: "N/A", harvestDate: "N/A", duration: "Steril", greenhouse: "Gudang Logistik", description: "Sekam bakar steril untuk campuran media." },
-    { name: "AB Mix Sayur Daun", category: "Nutrisi", price: "Rp. 45.000", img: pakcoyImg, plantedDate: "N/A", harvestDate: "N/A", duration: "1 Liter", greenhouse: "Lab Nutrisi", description: "Pekatan nutrisi AB Mix khusus sayur daun." },
-    { name: "AB Mix Buah", category: "Nutrisi", price: "Rp. 50.000", img: tomatImg, plantedDate: "N/A", harvestDate: "N/A", duration: "1 Liter", greenhouse: "Lab Nutrisi", description: "Pekatan nutrisi khusus tanaman buah." },
-    { name: "Benih Pokcoy Unggul", category: "Benih", price: "Rp. 8.000", img: pakcoyImg, plantedDate: "N/A", harvestDate: "N/A", duration: "Daya Tumbuh 95%", greenhouse: "Lab Benih", description: "Benih pokcoy pilihan tahan penyakit." },
-    { name: "Benih Selada", category: "Benih", price: "Rp. 10.000", img: seladaImg, plantedDate: "N/A", harvestDate: "N/A", duration: "Daya Tumbuh 90%", greenhouse: "Lab Benih", description: "Benih selada keriting lebat." },
-    { name: "Benih Tomat Ceri", category: "Benih", price: "Rp. 15.000", img: tomatImg, plantedDate: "N/A", harvestDate: "N/A", duration: "Daya Tumbuh 92%", greenhouse: "Lab Benih", description: "Benih tomat ceri hibrida." },
+    
+    { 
+      name: "Rockwool cubes", 
+      category: "Media Tanam", 
+      price: "Rp. 35.000", 
+      img: rockwoolImg, 
+      spec1: "Kapasitas Serap Tinggi", 
+      spec2: "Bersertifikasi SNI", 
+      spec3: "Siap Pakai / Potong", 
+      spec4: "Gudang Logistik", 
+      description: "Media tanam rockwool berkualitas tinggi dengan kapasitas serap air optimal." 
+    },
+    { 
+      name: "Netpot Hidroponik", 
+      category: "Media Tanam", 
+      price: "Rp. 5.000", 
+      img: netpotImg, 
+      spec1: "Plastik HDPE Berkualitas", 
+      spec2: "Food Grade & Certified", 
+      spec3: "Tahan Sinar UV", 
+      spec4: "Gudang Logistik", 
+      description: "Netpot hitam berkualitas untuk sirkulasi akar." 
+    },
+    { 
+      name: "Sekam Bakar", 
+      category: "Media Tanam", 
+      price: "Rp. 12.000", 
+      img: sekamImg, 
+      spec1: "Steril & Bebas Patogen", 
+      spec2: "Quality Controlled", 
+      spec3: "Porus & Gembur", 
+      spec4: "Gudang Logistik", 
+      description: "Sekam bakar steril untuk campuran media." 
+    },
+    { 
+      name: "AB Mix Sayur Daun", 
+      category: "Nutrisi", 
+      price: "Rp. 45.000", 
+      img: abmixsayurImg, 
+      spec1: "Larut 100% Tanpa Endapan", 
+      spec2: "Formula Lab Teruji", 
+      spec3: "Pekatan Cair 1 Liter", 
+      spec4: "Lab Nutrisi", 
+      description: "Pekatan nutrisi AB Mix khusus sayur daun." 
+    },
+    { 
+      name: "AB Mix Buah", 
+      category: "Nutrisi", 
+      price: "Rp. 50.000", 
+      img: abmixbuahImg, 
+      spec1: "Kandungan Kalium Tinggi", 
+      spec2: "Formula Lab Teruji", 
+      spec3: "Pekatan Cair 1 Liter", 
+      spec4: "Lab Nutrisi", 
+      description: "Pekatan nutrisi khusus tanaman buah." 
+    },
+    { 
+      name: "Benih Pokcoy Unggul", 
+      category: "Benih", 
+      price: "Rp. 8.000", 
+      img: benihpakcoyImg, 
+      spec1: "Daya Tumbuh >95%", 
+      spec2: "Sertifikat Benih Unggul", 
+      spec3: "Kemasan Sealed Pack", 
+      spec4: "Lab Benih", 
+      description: "Benih pokcoy pilihan tahan penyakit." 
+    },
+    { 
+      name: "Benih Selada", 
+      category: "Benih", 
+      price: "Rp. 10.000", 
+      img: benihseladaImg, 
+      spec1: "Daya Tumbuh >90%", 
+      spec2: "Sertifikat Benih Unggul", 
+      spec3: "Kemasan Sealed Pack", 
+      spec4: "Lab Benih", 
+      description: "Benih selada keriting lebat." 
+    },
+    { 
+      name: "Benih Tomat Ceri", 
+      category: "Benih", 
+      price: "Rp. 15.000", 
+      img: benihtomatImg, 
+      spec1: "Daya Tumbuh >92%", 
+      spec2: "Sertifikat Benih Unggul", 
+      spec3: "Kemasan Sealed Pack", 
+      spec4: "Lab Benih", 
+      description: "Benih tomat ceri hibrida." 
+    },
   ];
 
-  // Logika Filter Kategori dan Sorting Harga/Terbaru
   const filteredProducts = allProductsList.filter(item => {
     if (filterCategory === "Semua") return true;
     return item.category.toLowerCase() === filterCategory.toLowerCase();
@@ -233,11 +322,6 @@ export default function ShopPage({ setPage, user }) {
   return (
     <div className="landing-container shop-page-responsive">
       <style>{`
-
-        /* =====================================================
-           RESPONSIVE SHOP PAGE
-           HP • TABLET • LAPTOP • DESKTOP • MAC
-        ===================================================== */
         * { box-sizing: border-box; }
 
         .shop-page-responsive {
@@ -272,11 +356,80 @@ export default function ShopPage({ setPage, user }) {
           min-width: 0;
         }
 
+        {/* Hero Banner: Latar Belakang & Karakter Petani Terpisah */}
         .shop-page-responsive .hero {
-          width: calc(100% - 40px);
-          max-width: 1800px;
-          margin-left: auto;
-          margin-right: auto;
+          width: calc(100% - 48px);
+          max-width: 1320px;
+          margin: 20px auto;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          position: relative;
+          padding: 20px 50px;
+          border-radius: 22px;
+          background-color: #19462b;
+          background-image: radial-gradient(circle at 80% 50%, rgba(28, 77, 47, 0.9) 0%, rgba(20, 56, 34, 1) 100%);
+          border: 1px solid #245837;
+          box-shadow: 0 14px 36px rgba(15, 38, 24, 0.12);
+          overflow: hidden;
+          gap: 30px;
+        }
+
+        .shop-page-responsive .hero-left-character {
+          flex: 0.9;
+          display: flex;
+          align-items: flex-end;
+          justify-content: center;
+          position: relative;
+          min-height: 240px;
+        }
+
+        .shop-page-responsive .character-img {
+          width: 100%;
+          max-width: 340px;
+          height: auto;
+          object-fit: contain;
+          filter: drop-shadow(0 16px 28px rgba(0,0,0,0.25));
+          transform: translateY(12px);
+        }
+
+        .shop-page-responsive .hero-right-content {
+          flex: 1.1;
+          max-width: 600px;
+          z-index: 2;
+          text-align: left;
+        }
+
+        .shop-page-responsive .hero-tag {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 6px 14px;
+          background: rgba(43, 115, 71, 0.45);
+          color: #a3e0b8;
+          border: 1px solid rgba(163, 224, 184, 0.25);
+          border-radius: 99px;
+          font-size: 11.5px;
+          font-weight: 700;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          margin-bottom: 14px;
+        }
+
+        .shop-page-responsive .hero-right-content h1 {
+          font-size: clamp(28px, 2.6vw, 40px);
+          line-height: 1.15;
+          color: #ffffff;
+          margin-bottom: 12px;
+          font-weight: 800;
+          letter-spacing: -0.01em;
+        }
+
+        .shop-page-responsive .hero-right-content p {
+          font-size: clamp(13px, 1.1vw, 15px);
+          line-height: 1.6;
+          color: #d0e4d6;
+          margin: 0;
         }
 
         .shop-page-responsive .shop-categories-bar,
@@ -285,7 +438,7 @@ export default function ShopPage({ setPage, user }) {
         .shop-page-responsive .service-features-banner,
         .shop-page-responsive .footer {
           width: 100%;
-          max-width: 1800px;
+          max-width: 1320px;
           margin-left: auto;
           margin-right: auto;
         }
@@ -382,7 +535,7 @@ export default function ShopPage({ setPage, user }) {
           }
 
           .shop-page-responsive .hero {
-            min-height: 420px;
+            padding: 34px 32px;
           }
 
           .shop-page-responsive .best-seller-grid,
@@ -427,50 +580,31 @@ export default function ShopPage({ setPage, user }) {
             margin-left: auto;
           }
 
-          .shop-page-responsive .navbar-trigger-area {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-          }
-
-          .shop-page-responsive .navbar-trigger-area::-webkit-scrollbar {
-            display: none;
-          }
-
-          .shop-page-responsive .navbar {
-            min-width: max-content;
-            padding-left: 20px;
-            padding-right: 20px;
-          }
-
           .shop-page-responsive .hero {
-            min-height: 0;
-            display: grid !important;
-            grid-template-columns: 1fr !important;
+            flex-direction: column !important;
             gap: 20px;
-            padding: 40px 28px !important;
-          }
-
-          .shop-page-responsive .hero-content {
+            padding: 28px 20px !important;
             text-align: center;
-            max-width: 760px;
-            margin: 0 auto;
           }
 
-          .shop-page-responsive .hero-content h1 {
-            font-size: clamp(32px, 6vw, 52px) !important;
-            line-height: 1.08 !important;
+          .shop-page-responsive .hero-right-content {
+            text-align: center;
+            max-width: 100%;
           }
 
-          .shop-page-responsive .hero-content p {
-            max-width: 680px;
+          .shop-page-responsive .hero-tag {
             margin-left: auto;
             margin-right: auto;
           }
 
-          .shop-page-responsive .hero-visual {
-            min-height: 250px;
-            max-height: 330px;
+          .shop-page-responsive .hero-left-character {
+            min-height: 180px;
+            max-height: 220px;
+            width: 100%;
+          }
+
+          .shop-page-responsive .character-img {
+            max-width: 240px;
           }
 
           .shop-page-responsive .shop-categories-bar {
@@ -578,39 +712,30 @@ export default function ShopPage({ setPage, user }) {
             min-width: 46px !important;
           }
 
-          .shop-page-responsive .navbar {
-            gap: 24px !important;
-            padding-top: 10px !important;
-            padding-bottom: 10px !important;
-          }
-
-          .shop-page-responsive .navbar a {
-            font-size: 13px !important;
-          }
-
           .shop-page-responsive .hero {
-            width: calc(100% - 20px);
-            border-radius: 22px !important;
-            padding: 30px 18px 22px !important;
+            width: calc(100% - 16px);
+            border-radius: 16px !important;
+            padding: 20px 16px !important;
+            margin: 10px auto;
           }
 
-          .shop-page-responsive .hero-content h1 {
-            font-size: clamp(29px, 9vw, 42px) !important;
-            line-height: 1.08 !important;
+          .shop-page-responsive .hero-right-content h1 {
+            font-size: 22px !important;
+            margin-bottom: 6px !important;
           }
 
-          .shop-page-responsive .hero-content p {
-            font-size: 14px !important;
-            line-height: 1.65 !important;
+          .shop-page-responsive .hero-right-content p {
+            font-size: 12px !important;
+            line-height: 1.5 !important;
           }
 
-          .shop-page-responsive .hero-visual {
-            min-height: 190px;
-            max-height: 240px;
+          .shop-page-responsive .hero-left-character {
+            min-height: 140px;
+            max-height: 170px;
           }
 
-          .shop-page-responsive .floating-img {
-            max-height: 230px !important;
+          .shop-page-responsive .character-img {
+            max-width: 190px !important;
           }
 
           .shop-page-responsive .shop-categories-bar {
@@ -901,6 +1026,7 @@ export default function ShopPage({ setPage, user }) {
           cursor: pointer;
         }
       `}</style>
+      
       {/* Top bar */}
       <header className="topbar">
         <div className="logo">
@@ -1068,27 +1194,79 @@ export default function ShopPage({ setPage, user }) {
       </header>
 
       
-      {/* Hero / Banner Shop */}
+      {/* Hero / Banner Shop: Background Hijau Tua & Karakter Petani Terpisah */}
       <section className="hero shop-landing-hero">
-        <div className="hero-content">
-          <h1>SHOP<br />Kebutuhan Hidroponik Terbaik</h1>
-          <p>Temukan berbagai kebutuhan greenhouse, sayuran segar, media tanam, dan nutrisi hidroponik dengan kualitas terbaik langsung dari kebun.</p>
-        </div>
+  <div className="hero-left-character">
+    {/* Bungkus gambar sayur dan siluet dalam container relatif */}
+    <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
+      
+      {/* Siluet Putih (di belakang, dibuat lebih besar agar terlihat efek 'glow'-nya) */}
+      <div style={{
+        position: 'absolute',
+        // Posisikan sedikit ke bawah agar pas dengan dasar gambar sayur
+        bottom: '-5%', 
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: '340px', // Sesuaikan ukuran dasar, misal 110% dari gambar sayur
+        height: '340px',
+        background: 'rgba(255, 255, 255, 0.18)', // Putih transparan
+        borderRadius: '50%',
+        filter: 'blur(25px)', // Efek blur untuk siluet cahaya
+        zIndex: 1, // Di belakang sayuran
+      }}/>
 
-        <div className="hero-visual">
-          <div className="basket">
-            <img src={heroImg} alt="Foto etalase produk shop" className="floating-img" />
-          </div>
-        </div>
-      </section>
+      {/* Gambar Sayuran (di depan, dibuat lebih besar dan full) */}
+      <img 
+        src={heroImg} 
+        alt="Sayuran Segar Hidroponik" 
+        className="character-img" 
+        style={{
+          position: 'relative',
+          zIndex: 2, // Di depan siluet
+          width: '100%',
+          // Ukuran maksimum gambar dibuat lebih besar dari sebelumnya (misal dari 340px ke 400px)
+          maxWidth: '420px', 
+          height: 'auto',
+          objectFit: 'contain',
+          // Hapus atau kurangi drop-shadow standar agar siluet putih lebih dominan
+          filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.15))', 
+          // Pastikan gambar menyentuh dasar container
+          marginBottom: '0', 
+        }}
+      />
+    </div>
+  </div>
+
+  <div className="hero-right-content">
+    <div className="hero-tag">🌱 Hidroponik &amp; Segar</div>
+    <h1>Kebutuhan Hidroponik Terbaik<br />Langsung dari Kebun</h1>
+    <p>Temukan berbagai pilihan sayuran segar, media tanam berkualitas tinggi, dan nutrisi hidroponik standar industri.</p>
+  </div>
+</section>
 
       {/* Kategori Bar */}
       <section className="shop-categories-bar">
         {[
-          { name: "Sayuran", label: "Sayuran" },
-          { name: "Media Tanam", label: "Media Tanam" },
-          { name: "Nutrisi", label: "Nutrisi" },
-          { name: "Benih", label: "Benih" },
+          { 
+            name: "Sayuran", 
+            label: "Sayuran",
+            icon: <path d="M12 2a10 10 0 0 1 7.54 16.63L17 21h-2l-1-2h-4l-1 2H9l-2.54-2.37A10 10 0 0 1 12 2z"/> 
+          },
+          { 
+            name: "Media Tanam", 
+            label: "Media Tanam",
+            icon: <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/> 
+          },
+          { 
+            name: "Nutrisi", 
+            label: "Nutrisi",
+            icon: <path d="M12 2v6m0 0a4 4 0 0 1-4 4H6a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2h-2a4 4 0 0 1-4-4z"/> 
+          },
+          { 
+            name: "Benih", 
+            label: "Benih",
+            icon: <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/> 
+          },
         ].map((cat, idx) => (
           <div 
             className={`shop-cat-item ${filterCategory === cat.name ? 'active' : ''}`} 
@@ -1097,7 +1275,9 @@ export default function ShopPage({ setPage, user }) {
             style={{ cursor: 'pointer' }}
           >
             <div className="cat-icon-circle">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#2f8f4e" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/><path d="M9 12l2 2 4-4"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                {cat.icon}
+              </svg>
             </div>
             <span className="cat-text">{cat.label}</span>
           </div>
@@ -1175,10 +1355,16 @@ export default function ShopPage({ setPage, user }) {
       </section>
 
       {/* BANNER LAYANAN */}
+      {/* BANNER LAYANAN - Ikon Profesional */}
       <section className="service-features-banner">
+        {/* Fitur 1: Produk Berkualitas */}
         <div className="service-feature-item">
           <div className="service-icon-circle">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#2f8f4e" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/><path d="M9 12l2 2 4-4"/></svg>
+            {/* Ikon: Lencana/Medali Kualitas (Ribbon Badge) */}
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="8" r="7"></circle>
+              <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+            </svg>
           </div>
           <div>
             <h3>Produk Berkualitas</h3>
@@ -1186,9 +1372,16 @@ export default function ShopPage({ setPage, user }) {
           </div>
         </div>
 
+        {/* Fitur 2: Pengiriman Cepat */}
         <div className="service-feature-item">
           <div className="service-icon-circle">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#2f8f4e" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/><path d="M9 12l2 2 4-4"/></svg>
+            {/* Ikon: Truk Pengiriman dengan Aksen Cepat */}
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="1" y="3" width="15" height="13"></rect>
+              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+              <circle cx="5.5" cy="18.5" r="2.5"></circle>
+              <circle cx="18.5" cy="18.5" r="2.5"></circle>
+            </svg>
           </div>
           <div>
             <h3>Pengiriman Cepat</h3>
@@ -1196,9 +1389,14 @@ export default function ShopPage({ setPage, user }) {
           </div>
         </div>
 
+        {/* Fitur 3: Pembayaran Aman */}
         <div className="service-feature-item">
           <div className="service-icon-circle">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#2f8f4e" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/><path d="M9 12l2 2 4-4"/></svg>
+            {/* Ikon: Perisai dengan Simbol Mata Uang/Ceklis */}
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              <path d="M9 12l2 2 4-4"></path>
+            </svg>
           </div>
           <div>
             <h3>Pembayaran Aman</h3>
@@ -1777,27 +1975,80 @@ export default function ShopPage({ setPage, user }) {
                 <img src={selectedProduct.img} alt={selectedProduct.name} />
               </div>
               <div className="modal-info">
-                <span className="modal-category">{selectedProduct.category || "Produk Greenhouse"}</span>
+                <span className="modal-category">{selectedPluginCategoryFallback(selectedProduct)}</span>
                 <h2>{selectedProduct.name}</h2>
                 <div className="modal-price">{selectedProduct.price}</div>
                 <p className="modal-desc">{selectedProduct.description}</p>
 
                 <div className="spec-box">
                   <div className="spec-item">
-                    <span>📅 Tanggal Tanam:</span>
-                    <strong>{selectedProduct.plantedDate}</strong>
+                    <span>
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ verticalAlign: '-2px', marginRight: '6px' }}>
+                        {selectedProduct.category === "Sayuran" ? (
+                          <>
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                          </>
+                        ) : (
+                          <>
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                          </>
+                        )}
+                      </svg>
+                      {selectedProduct.category === "Sayuran" ? "Tanggal Tanam:" : "Spesifikasi Utama:"}
+                    </span>
+                    <strong>{selectedProduct.category === "Sayuran" ? selectedProduct.plantedDate : selectedProduct.spec1}</strong>
                   </div>
+
                   <div className="spec-item">
-                    <span>🌾 Tanggal Panen:</span>
-                    <strong>{selectedProduct.harvestDate}</strong>
+                    <span>
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ verticalAlign: '-2px', marginRight: '6px' }}>
+                        {selectedProduct.category === "Sayuran" ? (
+                          <>
+                            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
+                            <path d="M6 6h10M6 10h10"/>
+                          </>
+                        ) : (
+                          <>
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                          </>
+                        )}
+                      </svg>
+                      {selectedProduct.category === "Sayuran" ? "Tanggal Panen:" : "Kualitas / Sertifikasi:"}
+                    </span>
+                    <strong>{selectedProduct.category === "Sayuran" ? selectedProduct.harvestDate : selectedProduct.spec2}</strong>
                   </div>
+
                   <div className="spec-item">
-                    <span>⏱️ Masa Tanam:</span>
-                    <strong>{selectedProduct.duration}</strong>
+                    <span>
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ verticalAlign: '-2px', marginRight: '6px' }}>
+                        {selectedProduct.category === "Sayuran" ? (
+                          <>
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                          </>
+                        ) : (
+                          <>
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                          </>
+                        )}
+                      </svg>
+                      {selectedProduct.category === "Sayuran" ? "Masa Tanam:" : "Karakteristik:"}
+                    </span>
+                    <strong>{selectedProduct.category === "Sayuran" ? selectedProduct.duration : selectedProduct.spec3}</strong>
                   </div>
+
                   <div className="spec-item">
-                    <span>📍 Lokasi Lahan:</span>
-                    <strong>{selectedProduct.greenhouse}</strong>
+                    <span>
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ verticalAlign: '-2px', marginRight: '6px' }}>
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                      </svg>
+                      {selectedProduct.category === "Sayuran" ? "Lokasi Lahan:" : "Lokasi Penyimpanan:"}
+                    </span>
+                    <strong>{selectedProduct.category === "Sayuran" ? selectedProduct.greenhouse : selectedProduct.spec4}</strong>
                   </div>
                 </div>
 
@@ -1811,4 +2062,8 @@ export default function ShopPage({ setPage, user }) {
       )}
     </div>
   );
+}
+
+function selectedPluginCategoryFallback(item) {
+  return item.category || "Produk Greenhouse";
 }

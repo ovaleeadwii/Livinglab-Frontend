@@ -970,104 +970,67 @@
   }
 }
 
+/* Styling Bar Kategori Bersih Tanpa Background Hijau */
+        .shop-categories-bar {
+          display: flex;
+          justify-content: center;
+          gap: 16px;
+          margin: 30px auto;
+          padding: 0 20px;
+          flex-wrap: wrap;
+        }
 
+        .shop-cat-item {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 12px 24px;
+          background: #ffffff;
+          border: 1px solid #e2eae3;
+          border-radius: 99px;
+          cursor: pointer;
+          transition: all 0.25s ease;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
 
+        .shop-cat-item:hover {
+          border-color: #2f8f4e;
+          transform: translateY(-2px);
+          box-shadow: 0 6px 16px rgba(47, 143, 78, 0.1);
+        }
 
+        .shop-cat-item.active {
+          background: #176137;
+          border-color: #176137;
+          box-shadow: 0 6px 18px rgba(23, 97, 55, 0.25);
+        }
 
-/* Styling Kategori Bar Shop */
-/* Buat bar kategori melebar rata dan menyatu rapi */
-.shop-categories-bar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 40px;
-  padding: 20px 20px;
-  width: 100%;
-  background-color: #f4f7f5;
-  border-bottom: 1px solid #e5e7eb;
-  box-sizing: border-box;
-}
+        .cat-icon-circle {
+          width: 22px;
+          height: 22px;
+          background: transparent !important;
+          border: none !important;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #176137;
+        }
 
-.shop-cat-item {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 14px;
-  padding: 12px 24px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-  transition: all 0.2s ease;
-}
+        .shop-cat-item.active .cat-icon-circle {
+          background: transparent !important;
+          border: none !important;
+          color: #ffffff;
+        }
 
-.shop-cat-item:hover,
-.shop-cat-item.active {
-  border-color: #2f8f4e;
-  background: #f0fdf4;
-}
+        .cat-text {
+          font-weight: 700;
+          font-size: 14px;
+          color: #2c3e33;
+        }
 
-.cat-icon-box {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.cat-icon-box svg {
-  width: 20px;
-  height: 20px;
-}
-
-.shop-cat-item span {
-  font-size: 14px;
-  font-weight: 600;
-  color: #111827;
-}
-
-/* Styling Kategori Bar Sesuai Gambar Referensi */
-.shop-categories-bar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 45px;
-  padding: 22px 20px;
-  background-color: #f4f7f5;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.shop-cat-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  background: transparent;
-  border: none;
-  padding: 0;
-}
-
-.cat-icon-circle {
-  width: 42px;
-  height: 42px;
-  background: #ffffff;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-.cat-icon-circle svg {
-  width: 20px;
-  height: 20px;
-}
-
-.cat-text {
-  font-size: 15px;
-  font-weight: 700;
-  color: #1b4d3e; /* Warna hijau tua presisi sesuai gambar */
-}
+        .shop-cat-item.active .cat-text {
+          color: #ffffff;
+        }
 
 
 /* Styling Section Best Seller */
@@ -1467,58 +1430,64 @@
 }
 
 /* Styling Banner Fitur Layanan */
-.service-features-banner {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  background-color: #f4f7f5;
-  padding: 35px 40px;
-  border-top: 1px solid #e5e7eb;
-  border-bottom: 1px solid #e5e7eb;
-  gap: 20px;
-}
+/* Styling Banner Fitur Layanan - Rapat & Press */
+        .service-features-banner {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 12px; /* Dibuat rapat / press */
+          margin: 40px auto;
+          padding: 20px 24px;
+          background-color: #fbfdfb;
+          border-radius: 20px;
+          border: 1px solid #e6eee7;
+          box-shadow: 0 8px 24px rgba(15, 35, 23, 0.04);
+          align-items: center;
+        }
 
-.service-feature-item {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
+        .service-feature-item {
+          display: flex;
+          align-items: center;
+          gap: 12px; /* Jarak antara ikon dan teks lebih rapat */
+          padding: 10px 14px;
+          background: #ffffff;
+          border: 1px solid #edf4ee;
+          border-radius: 14px;
+        }
 
-.service-icon-circle {
-  width: 50px;
-  height: 50px;
-  background: #ffffff;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-}
+        .service-icon-circle {
+          width: 44px;
+          height: 44px;
+          min-width: 44px;
+          border-radius: 50%;
+          background-color: #eef7f0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #176137;
+          flex-shrink: 0;
+        }
 
-.service-icon-circle svg {
-  width: 24px;
-  height: 24px;
-}
+        .service-feature-item h3 {
+          margin: 0 0 2px 0;
+          color: #173524;
+          font-size: 15px;
+          font-weight: 800;
+        }
 
-.service-feature-item h3 {
-  font-size: 15px;
-  font-weight: 700;
-  color: #16502D;
-  margin: 0 0 2px 0;
-}
+        .service-feature-item p {
+          margin: 0;
+          color: #526158;
+          font-size: 13px;
+          line-height: 1.4;
+        }
 
-.service-feature-item p {
-  font-size: 12px;
-  color: #4b5563;
-  margin: 0;
-}
+        @media (max-width: 900px) {
+          .service-features-banner {
+            grid-template-columns: 1fr;
+            gap: 10px;
+          }
+        }
 
-@media (max-width: 768px) {
-  .service-features-banner {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
 
 /* Pengaturan Grid Footer Menjadi 5 Kolom Sejajar */
 .footer-grid {
@@ -1958,3 +1927,163 @@
   background: #fee2e2;
   color: #b91c1c;
 }
+
+
+/* =====================================================
+           SECTION MAPS / LOKASI - MINI & COMPACT
+        ===================================================== */
+        .maps-section {
+          width: 100%;
+          max-width: 900px; /* Lebar dibatasi agar tidak terlalu besar */
+          margin: 40px auto;
+          padding: 0 20px;
+        }
+
+        .maps-head-center {
+          text-align: center;
+          margin-bottom: 24px;
+        }
+
+        .maps-head-center .sub-title {
+          display: inline-block;
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 0.15em;
+          color: #2f7041;
+          background: #eef7f0;
+          padding: 4px 10px;
+          border-radius: 6px;
+          margin-bottom: 8px;
+          text-transform: uppercase;
+        }
+
+        .maps-head-center h2 {
+          font-size: 24px;
+          color: #173524;
+          font-weight: 800;
+          margin: 0 0 6px 0;
+        }
+
+        .maps-head-center p {
+          font-size: 13.5px;
+          color: #5d6d63;
+          margin: 0;
+        }
+
+        /* Wrapper kecil & nimbul */
+        .maps-wrapper {
+          display: grid;
+          grid-template-columns: 1.2fr 1fr;
+          gap: 16px;
+          background: #ffffff;
+          box-shadow: 0 8px 30px rgba(15, 35, 23, 0.06);
+          border-radius: 16px;
+          overflow: hidden;
+          padding: 12px;
+          border: 1px solid #e2eae3;
+          align-items: center;
+        }
+
+        /* Peta kecil ukuran mini */
+        .map-container {
+          position: relative;
+          width: 100%;
+          height: 260px; /* Dibuat kecil tingginya */
+          background: #edf4ee;
+          border-radius: 12px;
+          overflow: hidden;
+          box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .map-container iframe {
+          width: 100%;
+          height: 100%;
+          border: 0;
+          display: block;
+        }
+
+        /* Panel info versi compact */
+        .map-info-panel {
+          padding: 16px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          background: #fbfdfb;
+          border-radius: 12px;
+          border: 1px solid #edf4ee;
+        }
+
+        .map-info-card h3 {
+          font-size: 16px;
+          font-weight: 800;
+          color: #173524;
+          margin: 0 0 4px 0;
+        }
+
+        .map-info-card p {
+          font-size: 12.5px;
+          color: #59685e;
+          line-height: 1.5;
+          margin: 0 0 14px 0;
+        }
+
+        .map-meta-list {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          margin-bottom: 16px;
+        }
+
+        .map-meta-item {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 12px;
+          color: #2c3e33;
+          font-weight: 600;
+        }
+
+        .map-meta-icon {
+          width: 24px;
+          height: 24px;
+          border-radius: 6px;
+          background: #eef7f0;
+          color: #2f7041;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+
+        .map-direction-btn {
+          width: 100%;
+          height: 38px;
+          border: none;
+          border-radius: 8px;
+          background: linear-gradient(135deg, #2f7041, #245c34);
+          color: #ffffff;
+          font-weight: 700;
+          font-size: 12px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+          box-shadow: 0 3px 10px rgba(47, 112, 65, 0.2);
+          transition: all 0.2s ease;
+          text-decoration: none;
+        }
+
+        .map-direction-btn:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(47, 112, 65, 0.25);
+        }
+
+        @media (max-width: 768px) {
+          .maps-wrapper {
+            grid-template-columns: 1fr;
+          }
+          .map-container {
+            height: 220px;
+          }
+        }
