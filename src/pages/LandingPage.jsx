@@ -1535,76 +1535,83 @@ export default function LandingPage({ setPage, user }) {
       {/* =====================================================
           MAPS / LOKASI GREENHOUSE
       ===================================================== */}
+      {/* =====================================================
+          MAPS 3D ISOMETRIK & INFO BERJAJAR LURUS
+      ===================================================== */}
       <section className="maps-section">
-        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} variants={stagger} className="maps-head-center">
+        <motion.div 
+          initial="hidden" 
+          whileInView="visible" 
+          viewport={{ once: true, amount: 0.2 }} 
+          variants={stagger} 
+          className="maps-head-center"
+        >
           <motion.span variants={fadeUp} className="sub-title">LOKASI KEBUN</motion.span>
-          <motion.h2 variants={fadeUp}>Greenhouse & LivingLab Gisting</motion.h2>
-          <motion.p variants={fadeUp}>Kunjungi langsung pusat budidaya hidroponik kami di Kabupaten Tanggamus, Lampung.</motion.p>
+          <motion.h2 variants={fadeUp}>Agri-ICS LivingLab Gisting</motion.h2>
+          <motion.p variants={fadeUp}>
+            Kunjungi pusat inovasi dan greenhouse kami di Gisting, Tanggamus. Rasakan pengalaman pertanian presisi secara langsung.
+          </motion.p>
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="maps-wrapper"
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="maps-3d-card"
         >
-          {/* Peta Google Maps */}
-          <div className="map-container">
-            <iframe
-              title="Peta Lokasi Greenhouse Gisting"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15879.88!2d104.70!3d-5.38!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMjInMzMuMiJTIDEwNMKwNDInMDAuMCJF!5e0!3m2!1sid!2sid!4v1600000000000!5m2!1sid!2sid"
-              allowFullScreen=""
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
+          {/* Tampilan Visual 3D Isometrik Lokasi */}
+          <div className="map-3d-visual">
+            <img 
+              src={landsBg} 
+              alt="Ilustrasi 3D Isometrik Lokasi Greenhouse Gisting" 
             />
           </div>
 
-          {/* Panel Informasi */}
-          <div className="map-info-panel">
-            <div className="map-info-card">
-              <h3>Pusat Budidaya Utama</h3>
-              <p>Terintegrasi dengan sistem pemantauan IoT dan otomatisasi iklim mikro secara langsung.</p>
-
-              <div className="map-meta-list">
-                <div className="map-meta-item">
-                  <div className="map-meta-icon">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                  </div>
-                  <span>Kec. Gisting, Kab. Tanggamus, Lampung</span>
-                </div>
-
-                <div className="map-meta-item">
-                  <div className="map-meta-icon">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                  </div>
-                  <span>Buka Setiap Hari: 08.00 - 17.00 WIB</span>
-                </div>
-
-                <div className="map-meta-item">
-                  <div className="map-meta-icon">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                  </div>
-                  <span>5 Greenhouse Aktif & Terhubung IoT</span>
-                </div>
+          {/* 4 Kotak Informasi Berjajar Lurus ke Samping */}
+          <div className="map-info-row">
+            {/* Box 1: Lokasi */}
+            <div className="map-info-box">
+              <div className="map-box-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </div>
+              <div className="map-box-text">
+                <strong>Kec. Gisting, Tanggamus</strong>
               </div>
             </div>
 
-            <motion.a
-              href="https://maps.google.com/?q=Gisting,+Tanggamus+Regency,+Lampung"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="map-direction-btn"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <span>Buka Google Maps</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            </motion.a>
+            {/* Box 2: Jam Operasional */}
+            <div className="map-info-box">
+              <div className="map-box-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div className="map-box-text">
+                <strong>Buka Setiap Hari | 08:00 - 17:00 WIB</strong>
+              </div>
+            </div>
+
+            {/* Box 3: Kapasitas */}
+            <div className="map-info-box">
+              <div className="map-box-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              </div>
+              <div className="map-box-text">
+                <strong>5+ Greenhouse Aktif</strong>
+              </div>
+            </div>
+
+            {/* Box 4: Sistem IoT */}
+            <div className="map-info-box">
+              <div className="map-box-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>
+              </div>
+              <div className="map-box-text">
+                <strong>Sistem Agri-ICS IoT Terintegrasi</strong>
+              </div>
+            </div>
           </div>
         </motion.div>
       </section>
-
       
       {/* =====================================================
           STATS
