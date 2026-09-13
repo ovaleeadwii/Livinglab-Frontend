@@ -1613,10 +1613,90 @@ export default function LandingPage({ setPage, user }) {
         </motion.div>
       </section>
       
-      {/* =====================================================
-          STATS
+     {/* =====================================================
+          MAPS & INFO BERJAJAR LURUS
       ===================================================== */}
+      <section className="maps-section">
+        <motion.div 
+          initial="hidden" 
+          whileInView="visible" 
+          viewport={{ once: true, amount: 0.2 }} 
+          variants={stagger} 
+          className="maps-head-center"
+        >
+          <motion.span variants={fadeUp} className="sub-title">LOKASI KEBUN</motion.span>
+          <motion.h2 variants={fadeUp}>Agri-ICS LivingLab Gisting</motion.h2>
+          <motion.p variants={fadeUp}>
+            Kunjungi pusat inovasi dan greenhouse kami di Gisting, Tanggamus. Rasakan pengalaman pertanian presisi secara langsung.
+          </motion.p>
+        </motion.div>
 
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="maps-3d-card"
+        >
+          {/* Tampilan Peta Google Maps Asli */}
+          <div className="map-3d-visual">
+            <iframe
+              title="Peta Lokasi Greenhouse Gisting"
+              src="http://googleusercontent.com/maps.google.com/8"
+              allowFullScreen=""
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
+
+          {/* 4 Kotak Informasi Berjajar Lurus ke Samping */}
+          <div className="map-info-row">
+            {/* Box 1: Lokasi */}
+            <div className="map-info-box">
+              <div className="map-box-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </div>
+              <div className="map-box-text">
+                <strong>Kec. Gisting, Tanggamus</strong>
+              </div>
+            </div>
+
+            {/* Box 2: Jam Operasional */}
+            <div className="map-info-box">
+              <div className="map-box-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div className="map-box-text">
+                <strong>Buka Setiap Hari | 08:00 - 17:00 WIB</strong>
+              </div>
+            </div>
+
+            {/* Box 3: Kapasitas / Greenhouse */}
+            <div className="map-info-box">
+              <div className="map-box-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              </div>
+              <div className="map-box-text">
+                <strong>5+ Greenhouse Aktif</strong>
+              </div>
+            </div>
+
+            {/* Box 4: Sistem IoT */}
+            <div className="map-info-box">
+              <div className="map-box-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>
+              </div>
+              <div className="map-box-text">
+                <strong>Sistem Agri-ICS IoT Terintegrasi</strong>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* =====================================================
+          STATS SECTION
+      ===================================================== */}
       <motion.section
         initial="hidden"
         whileInView="visible"
@@ -1628,7 +1708,6 @@ export default function LandingPage({ setPage, user }) {
         className="highlights-section"
       >
         <div className="highlights-container-slim">
-
           <motion.div
             variants={fadeUp}
             className="stats-slim-bar"
@@ -1695,7 +1774,6 @@ export default function LandingPage({ setPage, user }) {
               </p>
             </motion.div>
           </motion.div>
-
         </div>
       </motion.section>
 
