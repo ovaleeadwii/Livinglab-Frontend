@@ -1932,158 +1932,146 @@
 /* =====================================================
            SECTION MAPS / LOKASI - MINI & COMPACT
         ===================================================== */
+       /* =====================================================
+           SECTION MAPS 3D ISOMETRIC & INFO BERJAJAR LURUS
+        ===================================================== */
         .maps-section {
           width: 100%;
-          max-width: 900px; /* Lebar dibatasi agar tidak terlalu besar */
-          margin: 40px auto;
-          padding: 0 20px;
+          max-width: 1240px;
+          margin: 60px auto;
+          padding: 0 24px;
         }
 
         .maps-head-center {
           text-align: center;
-          margin-bottom: 24px;
+          margin-bottom: 28px;
         }
 
         .maps-head-center .sub-title {
           display: inline-block;
-          font-size: 10px;
+          font-size: 11px;
           font-weight: 700;
-          letter-spacing: 0.15em;
-          color: #2f7041;
+          letter-spacing: 0.18em;
+          color: #2F7041;
           background: #eef7f0;
-          padding: 4px 10px;
-          border-radius: 6px;
-          margin-bottom: 8px;
+          padding: 6px 14px;
+          border-radius: 99px;
+          margin-bottom: 10px;
           text-transform: uppercase;
         }
 
         .maps-head-center h2 {
-          font-size: 24px;
+          font-size: clamp(28px, 3vw, 36px);
           color: #173524;
           font-weight: 800;
-          margin: 0 0 6px 0;
+          margin: 0 0 8px 0;
+          letter-spacing: -0.02em;
         }
 
         .maps-head-center p {
-          font-size: 13.5px;
-          color: #5d6d63;
-          margin: 0;
+          font-size: 14.5px;
+          color: #5D6D63;
+          margin: 0 auto;
+          max-width: 560px;
+          line-height: 1.6;
         }
 
-        /* Wrapper kecil & nimbul */
-        .maps-wrapper {
-          display: grid;
-          grid-template-columns: 1.2fr 1fr;
-          gap: 16px;
+        /* Card Utama 3D Map */
+        .maps-3d-card {
           background: #ffffff;
-          box-shadow: 0 8px 30px rgba(15, 35, 23, 0.06);
-          border-radius: 16px;
-          overflow: hidden;
-          padding: 12px;
           border: 1px solid #e2eae3;
-          align-items: center;
+          border-radius: 24px;
+          padding: 24px;
+          box-shadow: 0 16px 40px rgba(15, 35, 23, 0.08);
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
         }
 
-        /* Peta kecil ukuran mini */
-        .map-container {
+        /* Area Tampilan Visual 3D Isometrik */
+        .map-3d-visual {
           position: relative;
           width: 100%;
-          height: 260px; /* Dibuat kecil tingginya */
-          background: #edf4ee;
-          border-radius: 12px;
+          height: 380px;
+          border-radius: 18px;
           overflow: hidden;
-          box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
+          background: #f4f8f4;
+          box-shadow: inset 0 2px 8px rgba(0,0,0,0.04);
         }
 
-        .map-container iframe {
+        .map-3d-visual img {
           width: 100%;
           height: 100%;
-          border: 0;
+          object-fit: cover;
           display: block;
         }
 
-        /* Panel info versi compact */
-        .map-info-panel {
-          padding: 16px;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          background: #fbfdfb;
-          border-radius: 12px;
-          border: 1px solid #edf4ee;
+        /* 4 Kotak Informasi Berjajar Lurus ke Samping */
+        .map-info-row {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 16px;
         }
 
-        .map-info-card h3 {
-          font-size: 16px;
-          font-weight: 800;
-          color: #173524;
-          margin: 0 0 4px 0;
-        }
-
-        .map-info-card p {
-          font-size: 12.5px;
-          color: #59685e;
-          line-height: 1.5;
-          margin: 0 0 14px 0;
-        }
-
-        .map-meta-list {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-          margin-bottom: 16px;
-        }
-
-        .map-meta-item {
+        .map-info-box {
           display: flex;
           align-items: center;
-          gap: 8px;
-          font-size: 12px;
-          color: #2c3e33;
-          font-weight: 600;
+          gap: 14px;
+          padding: 16px 18px;
+          background: #fbfdfb;
+          border: 1px solid #edf4ee;
+          border-radius: 14px;
+          box-shadow: 0 4px 12px rgba(15, 35, 23, 0.02);
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .map-meta-icon {
-          width: 24px;
-          height: 24px;
-          border-radius: 6px;
+        .map-info-box:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 16px rgba(47, 112, 65, 0.08);
+          border-color: #d2e4d5;
+        }
+
+        .map-box-icon {
+          width: 40px;
+          height: 40px;
+          min-width: 40px;
+          border-radius: 10px;
           background: #eef7f0;
-          color: #2f7041;
+          color: #2F7041;
           display: flex;
           align-items: center;
           justify-content: center;
           flex-shrink: 0;
         }
 
-        .map-direction-btn {
-          width: 100%;
-          height: 38px;
-          border: none;
-          border-radius: 8px;
-          background: linear-gradient(135deg, #2f7041, #245c34);
-          color: #ffffff;
-          font-weight: 700;
-          font-size: 12px;
-          cursor: pointer;
+        .map-box-text {
           display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 6px;
-          box-shadow: 0 3px 10px rgba(47, 112, 65, 0.2);
-          transition: all 0.2s ease;
-          text-decoration: none;
+          flex-direction: column;
+          gap: 2px;
         }
 
-        .map-direction-btn:hover {
-          transform: translateY(-1px);
-          box-shadow: 0 4px 12px rgba(47, 112, 65, 0.25);
+        .map-box-text strong {
+          font-size: 13.5px;
+          color: #173524;
+          font-weight: 700;
+          line-height: 1.35;
         }
 
-        @media (max-width: 768px) {
-          .maps-wrapper {
+        /* Responsif untuk Tablet & HP */
+        @media (max-width: 1024px) {
+          .map-info-row {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+
+        @media (max-width: 600px) {
+          .map-info-row {
             grid-template-columns: 1fr;
           }
-          .map-container {
-            height: 220px;
+          .map-3d-visual {
+            height: 240px;
+          }
+          .maps-3d-card {
+            padding: 16px;
           }
         }
