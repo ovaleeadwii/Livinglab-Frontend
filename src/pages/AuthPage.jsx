@@ -5,22 +5,24 @@ export default function AuthPage({ setPage, onLoginSuccess }) {
   const [isLogin, setIsLogin] = useState(true);
   const [selectedRole, setSelectedRole] = useState('Petani / Mitra');
   
-  // State untuk menangkap input form pendaftaran/login
+  // State untuk form input profile / auth
   const [nameInput, setNameInput] = useState('');
   const [emailInput, setEmailInput] = useState('');
+  const [phoneInput, setPhoneInput] = useState('');
+  const [addressInput, setAddressInput] = useState('');
 
   const handleAuthSubmit = (e) => {
     e.preventDefault();
     
-    // Membuat akun dummy berdasarkan input atau data default
     const dummyUser = {
       name: nameInput ? nameInput : (isLogin ? "Anis Setiawati" : "Pengguna Baru Living Smart"),
       email: emailInput ? emailInput : "livingmart@gmail.com",
+      phone: phoneInput ? phoneInput : "+62 812-3456-7890",
+      address: addressInput ? addressInput : "Kec. Gisting, Tanggamus, Lampung",
       role: selectedRole,
       avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"
     };
 
-    // Memicu fungsi sukses login/register dari App.jsx
     if (onLoginSuccess) {
       onLoginSuccess(dummyUser);
     } else {
@@ -30,7 +32,7 @@ export default function AuthPage({ setPage, onLoginSuccess }) {
 
   return (
     <div className="landing-container">
-      {/* Top bar minimalis untuk halaman Auth */}
+      {/* Top bar minimalis */}
       <header className="topbar">
         <div className="logo" onClick={() => setPage('home')} style={{ cursor: 'pointer' }}>
           <div className="logo-badge">
@@ -54,9 +56,9 @@ export default function AuthPage({ setPage, onLoginSuccess }) {
         </div>
       </header>
 
-      {/* Konten Utama Form Auth */}
+      {/* Konten Utama Form Auth & Profile */}
       <section className="auth-hero-section">
-        <h1 className="auth-main-title">WELCOME TO LIVING SMART!</h1>
+        <h1 className="auth-main-title">{isLogin ? 'MASUK KE AKUN ANDA' : 'LENGKAPI PROFILE ANDA'}</h1>
 
         <div className="auth-card-container">
           {/* Tab Pilihan Masuk / Daftar Baru */}
@@ -71,30 +73,64 @@ export default function AuthPage({ setPage, onLoginSuccess }) {
               className={`auth-tab-btn ${!isLogin ? 'active' : ''}`}
               onClick={() => setIsLogin(false)}
             >
-              DAFTAR BARU
+              DAFTAR & PROFILE
             </button>
           </div>
 
-          {/* Form Input Dinamis (Masuk vs Daftar Baru) */}
+          {/* Form Input Sesuai Referensi Desain Profile */}
           <form onSubmit={handleAuthSubmit} className="auth-form-box">
             {!isLogin && (
-              <div className="form-group">
-                <label>Nama Lengkap</label>
-                <input 
-                  type="text" 
-                  placeholder="Masukkan nama lengkap..." 
-                  value={nameInput}
-                  onChange={(e) => setNameInput(e.target.value)}
-                  required 
-                />
-              </div>
+              <>
+                <div className="profile-photo-upload-row" style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
+                  <div className="profile-preview-circle" style={{ width: '64px', height: '64px', borderRadius: '50%', background: '#eef7f0', border: '2px solid #2F7041', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" alt="Avatar Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#173524', marginBottom: '4px' }}>FOTO PROFILE</label>
+                    <input type="file" accept="image/*" style={{ fontSize: '11px', color: '#5D6D63' }} />
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label>Nama Lengkap</label>
+                  <input 
+                    type="text" 
+                    placeholder="Masukkan nama lengkap..." 
+                    value={nameInput}
+                    onChange={(e) => setNameInput(e.target.value)}
+                    required 
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Nomor WhatsApp</label>
+                  <input 
+                    type="text" 
+                    placeholder="Contoh: 081234567890" 
+                    value={phoneInput}
+                    onChange={(e) => setPhoneInput(e.target.value)}
+                    required 
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Alamat Domisili</label>
+                  <input 
+                    type="text" 
+                    placeholder="Masukkan alamat lengkap..." 
+                    value={addressInput}
+                    onChange={(e) => setAddressInput(e.target.value)}
+                    required 
+                  />
+                </div>
+              </>
             )}
 
             <div className="form-group">
-              <label>NO. WhatsApp / Email</label>
+              <label>Email / Akun</label>
               <input 
                 type="text" 
-                placeholder="Masukkan nomor atau email..." 
+                placeholder="Masukkan email atau nomor..." 
                 value={emailInput}
                 onChange={(e) => setEmailInput(e.target.value)}
                 required 
@@ -102,32 +138,25 @@ export default function AuthPage({ setPage, onLoginSuccess }) {
             </div>
 
             {!isLogin && (
-              <>
-                <div className="form-group">
-                  <label>Pekerjaan</label>
-                  <input type="text" placeholder="Masukkan pekerjaan..." />
+              <div className="form-group">
+                <label>Role / Peran Pengguna</label>
+                <div className="role-radio-grid" style={{ display: 'flex', gap: '16px', marginTop: '6px' }}>
+                  {[
+                    'Petani / Mitra',
+                    'Konsumen',
+                  ].map((role, idx) => (
+                    <label className="radio-label" key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: '600', color: '#173524' }}>
+                      <input 
+                        type="radio" 
+                        name="userRole" 
+                        checked={selectedRole === role} 
+                        onChange={() => setSelectedRole(role)} 
+                      />
+                      <span>{role}</span>
+                    </label>
+                  ))}
                 </div>
-
-                <div className="form-group">
-                  <label>Role / Peran</label>
-                  <div className="role-radio-grid">
-                    {[
-                      'Petani / Mitra',
-                      'Konsumen',
-                    ].map((role, idx) => (
-                      <label className="radio-label" key={idx}>
-                        <input 
-                          type="radio" 
-                          name="userRole" 
-                          checked={selectedRole === role} 
-                          onChange={() => setSelectedRole(role)} 
-                        />
-                        <span>{role}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              </>
+              </div>
             )}
 
             <div className="form-group">
@@ -155,7 +184,7 @@ export default function AuthPage({ setPage, onLoginSuccess }) {
 
             <div className="auth-buttons-grid">
               <button type="submit" className="btn-primary-auth">
-                {isLogin ? 'Masuk ke Akun →' : 'Daftar Sekarang →'}
+                {isLogin ? 'Masuk ke Akun →' : 'Simpan & Lanjutkan →'}
               </button>
               <button 
                 type="button" 
@@ -169,419 +198,50 @@ export default function AuthPage({ setPage, onLoginSuccess }) {
           </form>
         </div>
       </section>
-{/* =====================================================
-          FOOTER
-      ===================================================== */}
 
-      <motion.footer
-        initial={{
-          opacity: 0,
-        }}
-        whileInView={{
-          opacity: 1,
-        }}
-        viewport={{
-          once: true,
-        }}
-        transition={{
-          duration: 0.7,
-        }}
-        className="footer"
-      >
+      {/* Footer Hijau Tua */}
+      <footer className="footer">
         <div className="footer-grid">
-
-          {/* BRAND */}
-
-          <motion.div
-            className="footer-brand"
-            whileHover={{
-              y: -2,
-            }}
-          >
-            <motion.div
-              className="footer-brand-icon"
-              whileHover={{
-                scale: 1.04,
-              }}
-            >
-              <img
-                src={logoImg}
-                alt="Agri-ICS"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "contain",
-                }}
-              />
-            </motion.div>
-
-            <div>
-              <div className="name">
-                Living Smart
-              </div>
-
-              <div className="tag">
-                Solusi sayur segar dan sehat
-              </div>
-
-              <p className="desc">
-                Menghubungkan teknologi dan pertanian
-                untuk masa depan pangan yang lebih hijau
-                dan berkelanjutan.
-              </p>
+          <div className="footer-brand">
+            <div className="footer-brand-icon">
+              <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l9 7h-2v10h-5v-6H10v6H5V10H3z"/><path d="M12 9c-1.5-2-4-2-4 0 1.5 0 3 .5 4 2"/></svg>
             </div>
-          </motion.div>
-
-          {/* QUICK LINKS */}
+            <div>
+              <div className="name">Living Smart</div>
+              <div className="tag">Solusi sayur segar dan sehat</div>
+              <p className="desc">Menghubungkan teknologi dan pertanian untuk masa depan pangan yang lebih hijau dan berkelanjutan.</p>
+            </div>
+          </div>
 
           <div className="footer-col">
             <h4>Quick links</h4>
-
-            <motion.a
-              href="#home"
-              whileHover={{
-                x: 3,
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                setPage("home");
-              }}
-            >
-              Home
-            </motion.a>
-
-            <motion.a
-              href="#dashboard"
-              whileHover={{
-                x: 3,
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                setPage("dashboard");
-              }}
-            >
-              Dashboard
-            </motion.a>
-
-            <motion.a
-              href="#shop"
-              whileHover={{
-                x: 3,
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                handleMarketplace();
-              }}
-            >
-              Shop
-            </motion.a>
+            <a href="#home" onClick={(e) => { e.preventDefault(); setPage('home'); }}>Home</a>
+            <a href="#dashboard" onClick={(e) => { e.preventDefault(); setPage('dashboard'); }}>Dashboard</a>
+            <a href="#shop" onClick={(e) => { e.preventDefault(); setPage('shop'); }}>Shop</a>
           </div>
-
-          {/* SHOP */}
 
           <div className="footer-col">
             <h4>Shop</h4>
-
-            <motion.a
-              href="#shop"
-              whileHover={{
-                x: 3,
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                handleMarketplace();
-              }}
-            >
-              All Products
-            </motion.a>
-
-            <motion.a
-              href="#shop"
-              whileHover={{
-                x: 3,
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                handleMarketplace();
-              }}
-            >
-              Best Seller
-            </motion.a>
-
-            <motion.a
-              href="#shop"
-              whileHover={{
-                x: 3,
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                handleMarketplace();
-              }}
-            >
-              Promo
-            </motion.a>
+            <a href="#shop" onClick={(e) => { e.preventDefault(); setPage('shop'); }}>All Products</a>
+            <a href="#shop" onClick={(e) => { e.preventDefault(); setPage('shop'); }}>Best Seller</a>
+            <a href="#shop" onClick={(e) => { e.preventDefault(); setPage('shop'); }}>Promo</a>
           </div>
-
-          {/* INFORMATION */}
 
           <div className="footer-col">
             <h4>Information</h4>
-
-            <motion.a
-              href="#faq"
-              whileHover={{
-                x: 3,
-              }}
-            >
-              FAQ
-            </motion.a>
-
-            <motion.a
-              href="#terms"
-              whileHover={{
-                x: 3,
-              }}
-            >
-              Terms &amp; Conditions
-            </motion.a>
-
-            <motion.a
-              href="#privacy"
-              whileHover={{
-                x: 3,
-              }}
-            >
-              Privacy Policy
-            </motion.a>
+            <a href="#faq">FAQ</a>
+            <a href="#terms">Terms &amp; Conditions</a>
+            <a href="#privacy">Privacy Policy</a>
           </div>
-
-          {/* CONTACT */}
 
           <div className="footer-col">
             <h4>Contact Us</h4>
-
-            <motion.div
-              className="footer-contact-item"
-              whileHover={{
-                x: 3,
-              }}
-            >
-              📍 Gisting, Tanggamus
-            </motion.div>
-
-            <motion.div
-              className="footer-contact-item"
-              whileHover={{
-                x: 3,
-              }}
-            >
-              📞 +62 812 3456 7890
-            </motion.div>
-
-            <motion.div
-              className="footer-contact-item"
-              whileHover={{
-                x: 3,
-              }}
-            >
-              ✉️ Livingmart@gmail.com
-            </motion.div>
+            <div className="footer-contact-item">📍 Gisting, Tanggamus</div>
+            <div className="footer-contact-item">📞 +62 812 3456 7890</div>
+            <div className="footer-contact-item">✉️ Livingmart@gmail.com</div>
           </div>
-
         </div>
-
-        <div
-          style={{
-            marginTop: 32,
-            paddingTop: 18,
-            borderTop:
-              "1px solid rgba(255,255,255,0.08)",
-            textAlign: "center",
-            color:
-              "rgba(255,255,255,0.32)",
-            fontSize: 11,
-          }}
-        >
-          Smart Agriculture • IoT • LivingLab
-        </div>
-      </motion.footer>
-      </motion.div>
-
-      <AnimatePresence>
-        {showIntro && (
-          <motion.div
-            initial={{ opacity: 1 }}
-            exit={{
-              opacity: 0,
-              transition: {
-                duration: 0.8,
-                ease: [0.22, 1, 0.36, 1],
-              },
-            }}
-            style={{
-              position: "fixed",
-              inset: 0,
-              width: "100vw",
-              height: "100dvh",
-              zIndex: 999999,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              overflow: "hidden",
-              background:
-                "linear-gradient(135deg, #092B17 0%, #123D22 55%, #17351E 100%)",
-            }}
-          >
-            <motion.div
-              animate={{
-                opacity: [0.12, 0.27, 0.12],
-                scale: [0.84, 1.08, 0.84],
-              }}
-              transition={{
-                duration: 2.6,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              style={{
-                position: "absolute",
-                left: "50%",
-                top: "50%",
-                width: 320,
-                height: 320,
-                transform: "translate(-50%, -50%)",
-                borderRadius: "50%",
-                background: "#B9EE91",
-                filter: "blur(100px)",
-              }}
-            />
-
-            <motion.div
-              initial={{
-                opacity: 0,
-                scale: 0.82,
-                y: 12,
-              }}
-              animate={{
-                opacity: 1,
-                scale: 1,
-                y: 0,
-              }}
-              exit={{
-                opacity: 0,
-                scale: 0.96,
-                y: -7,
-              }}
-              transition={{
-                duration: 0.8,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              style={{
-                position: "relative",
-                zIndex: 2,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                textAlign: "center",
-              }}
-            >
-              <motion.div
-                animate={{
-                  scale: [1, 1.035, 1],
-                }}
-                transition={{
-                  duration: 1.8,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                style={{
-                  width: 120,
-                  height: 120,
-                  padding: 8,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: "50%",
-                  background: "#FFFFFF",
-                  boxShadow:
-                    "0 0 70px rgba(185,238,145,0.22)",
-                }}
-              >
-                <img
-                  src={logoImg}
-                  alt="Agri-ICS"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "contain",
-                  }}
-                />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  delay: 0.3,
-                  duration: 0.6,
-                }}
-                style={{
-                  marginTop: 22,
-                  color: "#FFFFFF",
-                  fontSize: 30,
-                  fontWeight: 700,
-                  letterSpacing: "0.08em",
-                }}
-              >
-                AGRI
-                <span style={{ color: "#B9EE91" }}>
-                  -ICS
-                </span>
-              </motion.div>
-
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{
-                  delay: 0.55,
-                  duration: 0.6,
-                }}
-                style={{
-                  margin: "7px 0 0",
-                  color: "rgba(255,255,255,0.48)",
-                  fontSize: 11,
-                  letterSpacing: "0.22em",
-                }}
-              >
-                SMART AGRICULTURE • IoT • LIVINGLAB
-              </motion.p>
-
-              <motion.div
-                initial={{
-                  width: 0,
-                  opacity: 0,
-                }}
-                animate={{
-                  width: 80,
-                  opacity: 1,
-                }}
-                transition={{
-                  delay: 0.8,
-                  duration: 1.2,
-                  ease: "easeInOut",
-                }}
-                style={{
-                  height: 1,
-                  marginTop: 26,
-                  background:
-                    "rgba(185,238,145,0.5)",
-                }}
-              />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
+      </footer>
     </div>
   );
 }
