@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import "../index.css";
 import logoImg from "../assets/logo.svg";
 
@@ -7,12 +8,6 @@ import logoImg from "../assets/logo.svg";
   ----------------------------------------------------
   UI dashboard greenhouse dengan struktur data yang siap
   menerima response API/backend di kemudian hari.
-
-  Contoh:
-  <DashboardPage
-    setPage={setCurrentPage}
-    dashboardData={dataFromApi}
-  />
 */
 
 const defaultData = {
@@ -169,7 +164,13 @@ export default function DashboardPage({
   const goMarketplace = () => setPage("shop");
 
   return (
-    <div className="pro-dashboard">
+    <motion.div 
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className="pro-dashboard"
+    >
       <style>{`
         .pro-dashboard,
         .pro-dashboard * {
@@ -687,125 +688,98 @@ export default function DashboardPage({
           cursor: pointer;
         }
 
-
         /* Footer */
-        .pro-footer {
+        .footer {
           margin-top: 30px;
           background: #173524;
           color: #ffffff;
           border-top: 1px solid #244c32;
         }
 
-        .pro-footer-inner {
+        .footer-grid {
           width: min(1420px, calc(100% - 56px));
           margin: 0 auto;
           padding: 42px 0 24px;
-        }
-
-        .pro-footer-main {
           display: grid;
           grid-template-columns: 1.8fr 1fr 1fr 1.15fr;
           gap: 44px;
-          padding-bottom: 34px;
         }
 
-        .pro-footer-brand {
+        .footer-brand {
           display: flex;
           align-items: flex-start;
           gap: 12px;
         }
 
-        .pro-footer-brand img {
+        .footer-brand-icon {
           width: 52px;
           height: 52px;
-          object-fit: contain;
           background: #ffffff;
           border-radius: 50%;
           padding: 3px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
-        .pro-footer-brand-name {
+        .footer-brand .name {
           font-size: 21px;
           font-weight: 800;
           letter-spacing: -.03em;
         }
 
-        .pro-footer-brand-name span {
+        .footer-brand .name span {
           color: #9bd59d;
         }
 
-        .pro-footer-description {
+        .footer-brand .tag {
+          font-size: 12px;
+          color: #b9c8bc;
+          margin-top: 2px;
+        }
+
+        .footer-brand .desc {
           max-width: 350px;
-          margin: 14px 0 0 64px;
+          margin: 14px 0 0;
           color: #b9c8bc;
           font-size: 12px;
           line-height: 1.7;
         }
 
-        .pro-footer-column h3 {
+        .footer-col h4 {
           margin: 0 0 14px;
           color: #ffffff;
           font-size: 13px;
           font-weight: 800;
         }
 
-        .pro-footer-column button {
+        .footer-col a,
+        .footer-col div {
           display: block;
           margin: 0 0 9px;
-          padding: 0;
-          border: 0;
-          background: transparent;
           color: #b9c8bc;
-          font: inherit;
           font-size: 12px;
+          text-decoration: none;
           cursor: pointer;
-          text-align: left;
         }
 
-        .pro-footer-column button:hover {
+        .footer-col a:hover {
           color: #ffffff;
         }
 
-        .pro-footer-contact {
-          color: #b9c8bc;
-          font-size: 12px;
-          line-height: 1.8;
-        }
-
-        .pro-footer-bottom {
-          border-top: 1px solid rgba(255,255,255,.12);
-          padding-top: 18px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 15px;
-          color: #91a498;
-          font-size: 11px;
-        }
-
-        .pro-footer-bottom span:last-child {
-          text-align: right;
-        }
-
-        /* Responsive */
         @media (max-width: 1050px) {
           .pro-grid-3 {
             grid-template-columns: repeat(2, minmax(0, 1fr));
           }
-
           .pro-intro-grid {
             align-items: flex-start;
             flex-direction: column;
           }
-
           .pro-greenhouse-info {
             width: 100%;
             flex-basis: auto;
           }
-        }
-
-        @media (max-width: 900px) {
-          .pro-footer-main {
+          .footer-grid {
             grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 30px;
           }
@@ -815,129 +789,27 @@ export default function DashboardPage({
           .pro-container {
             width: calc(100% - 28px);
           }
-
           .pro-header-inner {
             min-height: auto;
             padding: 14px 0;
             align-items: flex-start;
             flex-direction: column;
           }
-
           .pro-header-actions {
             width: 100%;
             display: grid;
             grid-template-columns: 1fr 1fr;
           }
-
           .pro-nav-button {
             width: 100%;
             justify-content: center;
           }
-
-          .pro-intro {
-            padding-top: 20px;
-          }
-
-          .pro-intro-grid {
-            padding: 23px 20px;
-            border-radius: 13px;
-          }
-
-          .pro-intro h1 {
-            font-size: 32px;
-          }
-
-          .pro-intro p {
-            font-size: 13px;
-          }
-
-          .pro-content {
-            padding: 18px 14px;
-            border-radius: 0 10px 10px 10px;
-          }
-
           .pro-grid-3 {
             grid-template-columns: 1fr;
-            gap: 13px;
           }
-
-          .pro-actuator-card {
-            min-height: 165px;
-          }
-
-          .pro-metric-card {
-            min-height: 112px;
-          }
-
-          .pro-metric-value {
-            font-size: 27px;
-          }
-
-          .pro-chart {
-            padding: 16px;
-          }
-
-          .pro-download {
-            align-items: stretch;
-            flex-direction: column;
-            padding: 19px;
-          }
-
-          .pro-download-btn {
-            width: 100%;
-          }
-
-          .pro-footer-inner {
-            width: calc(100% - 28px);
-            padding: 34px 0 20px;
-          }
-
-          .pro-footer-main {
+          .footer-grid {
             grid-template-columns: 1fr;
             gap: 25px;
-            padding-bottom: 26px;
-          }
-
-          .pro-footer-description {
-            margin-left: 0;
-          }
-
-          .pro-footer-bottom {
-            align-items: flex-start;
-            flex-direction: column;
-          }
-
-          .pro-footer-bottom span:last-child {
-            text-align: left;
-          }
-        }
-
-        @media (max-width: 390px) {
-          .pro-header-actions {
-            grid-template-columns: 1fr;
-          }
-
-          .pro-brand-name {
-            font-size: 20px;
-          }
-
-          .pro-brand img {
-            width: 46px;
-            height: 46px;
-          }
-
-          .pro-intro h1 {
-            font-size: 29px;
-          }
-
-          .pro-tabs button {
-            padding: 0 16px;
-          }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .pro-nav-button {
-            transition: none;
           }
         }
       `}</style>
@@ -1217,419 +1089,69 @@ export default function DashboardPage({
         </div>
       </main>
 
-     {/* =====================================================
-          FOOTER
-      ===================================================== */}
-
+      {/* FOOTER */}
       <motion.footer
-        initial={{
-          opacity: 0,
-        }}
-        whileInView={{
-          opacity: 1,
-        }}
-        viewport={{
-          once: true,
-        }}
-        transition={{
-          duration: 0.7,
-        }}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7 }}
         className="footer"
       >
         <div className="footer-grid">
-
-          {/* BRAND */}
-
-          <motion.div
-            className="footer-brand"
-            whileHover={{
-              y: -2,
-            }}
-          >
-            <motion.div
-              className="footer-brand-icon"
-              whileHover={{
-                scale: 1.04,
-              }}
-            >
+          <motion.div className="footer-brand" whileHover={{ y: -2 }}>
+            <motion.div className="footer-brand-icon" whileHover={{ scale: 1.04 }}>
               <img
                 src={logoImg}
                 alt="Agri-ICS"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "contain",
-                }}
+                style={{ width: "100%", height: "100%", objectFit: "contain" }}
               />
             </motion.div>
-
             <div>
               <div className="name">
-                Living Smart
+                Living <span>Smart</span>
               </div>
-
-              <div className="tag">
-                Solusi sayur segar dan sehat
-              </div>
-
+              <div className="tag">Solusi sayur segar dan sehat</div>
               <p className="desc">
-                Menghubungkan teknologi dan pertanian
-                untuk masa depan pangan yang lebih hijau
-                dan berkelanjutan.
+                Menghubungkan teknologi dan pertanian untuk masa depan pangan yang lebih hijau dan berkelanjutan.
               </p>
             </div>
           </motion.div>
 
-          {/* QUICK LINKS */}
-
           <div className="footer-col">
             <h4>Quick links</h4>
-
-            <motion.a
-              href="#home"
-              whileHover={{
-                x: 3,
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                setPage("home");
-              }}
-            >
-              Home
-            </motion.a>
-
-            <motion.a
-              href="#dashboard"
-              whileHover={{
-                x: 3,
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                setPage("dashboard");
-              }}
-            >
-              Dashboard
-            </motion.a>
-
-            <motion.a
-              href="#shop"
-              whileHover={{
-                x: 3,
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                handleMarketplace();
-              }}
-            >
-              Shop
-            </motion.a>
+            <motion.a href="#home" whileHover={{ x: 3 }} onClick={(e) => { e.preventDefault(); setPage("home"); }}>Home</motion.a>
+            <motion.a href="#dashboard" whileHover={{ x: 3 }} onClick={(e) => { e.preventDefault(); setPage("dashboard"); }}>Dashboard</motion.a>
+            <motion.a href="#shop" whileHover={{ x: 3 }} onClick={(e) => { e.preventDefault(); goMarketplace(); }}>Shop</motion.a>
           </div>
-
-          {/* SHOP */}
 
           <div className="footer-col">
             <h4>Shop</h4>
-
-            <motion.a
-              href="#shop"
-              whileHover={{
-                x: 3,
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                handleMarketplace();
-              }}
-            >
-              All Products
-            </motion.a>
-
-            <motion.a
-              href="#shop"
-              whileHover={{
-                x: 3,
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                handleMarketplace();
-              }}
-            >
-              Best Seller
-            </motion.a>
-
-            <motion.a
-              href="#shop"
-              whileHover={{
-                x: 3,
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                handleMarketplace();
-              }}
-            >
-              Promo
-            </motion.a>
+            <motion.a href="#shop" whileHover={{ x: 3 }} onClick={(e) => { e.preventDefault(); goMarketplace(); }}>All Products</motion.a>
+            <motion.a href="#shop" whileHover={{ x: 3 }} onClick={(e) => { e.preventDefault(); goMarketplace(); }}>Best Seller</motion.a>
+            <motion.a href="#shop" whileHover={{ x: 3 }} onClick={(e) => { e.preventDefault(); goMarketplace(); }}>Promo</motion.a>
           </div>
-
-          {/* INFORMATION */}
-
-          <div className="footer-col">
-            <h4>Information</h4>
-
-            <motion.a
-              href="#faq"
-              whileHover={{
-                x: 3,
-              }}
-            >
-              FAQ
-            </motion.a>
-
-            <motion.a
-              href="#terms"
-              whileHover={{
-                x: 3,
-              }}
-            >
-              Terms &amp; Conditions
-            </motion.a>
-
-            <motion.a
-              href="#privacy"
-              whileHover={{
-                x: 3,
-              }}
-            >
-              Privacy Policy
-            </motion.a>
-          </div>
-
-          {/* CONTACT */}
 
           <div className="footer-col">
             <h4>Contact Us</h4>
-
-            <motion.div
-              className="footer-contact-item"
-              whileHover={{
-                x: 3,
-              }}
-            >
-              📍 Gisting, Tanggamus
-            </motion.div>
-
-            <motion.div
-              className="footer-contact-item"
-              whileHover={{
-                x: 3,
-              }}
-            >
-              📞 +62 812 3456 7890
-            </motion.div>
-
-            <motion.div
-              className="footer-contact-item"
-              whileHover={{
-                x: 3,
-              }}
-            >
-              ✉️ Livingmart@gmail.com
-            </motion.div>
+            <div className="footer-contact-item">📍 Gisting, Tanggamus</div>
+            <div className="footer-contact-item">📞 +62 812 3456 7890</div>
+            <div className="footer-contact-item">✉️ Livingmart@gmail.com</div>
           </div>
-
         </div>
 
         <div
           style={{
             marginTop: 32,
             paddingTop: 18,
-            borderTop:
-              "1px solid rgba(255,255,255,0.08)",
+            borderTop: "1px solid rgba(255,255,255,0.08)",
             textAlign: "center",
-            color:
-              "rgba(255,255,255,0.32)",
+            color: "rgba(255,255,255,0.32)",
             fontSize: 11,
           }}
         >
           Smart Agriculture • IoT • LivingLab
         </div>
       </motion.footer>
-      </motion.div>
-
-      <AnimatePresence>
-        {showIntro && (
-          <motion.div
-            initial={{ opacity: 1 }}
-            exit={{
-              opacity: 0,
-              transition: {
-                duration: 0.8,
-                ease: [0.22, 1, 0.36, 1],
-              },
-            }}
-            style={{
-              position: "fixed",
-              inset: 0,
-              width: "100vw",
-              height: "100dvh",
-              zIndex: 999999,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              overflow: "hidden",
-              background:
-                "linear-gradient(135deg, #092B17 0%, #123D22 55%, #17351E 100%)",
-            }}
-          >
-            <motion.div
-              animate={{
-                opacity: [0.12, 0.27, 0.12],
-                scale: [0.84, 1.08, 0.84],
-              }}
-              transition={{
-                duration: 2.6,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              style={{
-                position: "absolute",
-                left: "50%",
-                top: "50%",
-                width: 320,
-                height: 320,
-                transform: "translate(-50%, -50%)",
-                borderRadius: "50%",
-                background: "#B9EE91",
-                filter: "blur(100px)",
-              }}
-            />
-
-            <motion.div
-              initial={{
-                opacity: 0,
-                scale: 0.82,
-                y: 12,
-              }}
-              animate={{
-                opacity: 1,
-                scale: 1,
-                y: 0,
-              }}
-              exit={{
-                opacity: 0,
-                scale: 0.96,
-                y: -7,
-              }}
-              transition={{
-                duration: 0.8,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              style={{
-                position: "relative",
-                zIndex: 2,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                textAlign: "center",
-              }}
-            >
-              <motion.div
-                animate={{
-                  scale: [1, 1.035, 1],
-                }}
-                transition={{
-                  duration: 1.8,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                style={{
-                  width: 120,
-                  height: 120,
-                  padding: 8,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: "50%",
-                  background: "#FFFFFF",
-                  boxShadow:
-                    "0 0 70px rgba(185,238,145,0.22)",
-                }}
-              >
-                <img
-                  src={logoImg}
-                  alt="Agri-ICS"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "contain",
-                  }}
-                />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  delay: 0.3,
-                  duration: 0.6,
-                }}
-                style={{
-                  marginTop: 22,
-                  color: "#FFFFFF",
-                  fontSize: 30,
-                  fontWeight: 700,
-                  letterSpacing: "0.08em",
-                }}
-              >
-                AGRI
-                <span style={{ color: "#B9EE91" }}>
-                  -ICS
-                </span>
-              </motion.div>
-
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{
-                  delay: 0.55,
-                  duration: 0.6,
-                }}
-                style={{
-                  margin: "7px 0 0",
-                  color: "rgba(255,255,255,0.48)",
-                  fontSize: 11,
-                  letterSpacing: "0.22em",
-                }}
-              >
-                SMART AGRICULTURE • IoT • LIVINGLAB
-              </motion.p>
-
-              <motion.div
-                initial={{
-                  width: 0,
-                  opacity: 0,
-                }}
-                animate={{
-                  width: 80,
-                  opacity: 1,
-                }}
-                transition={{
-                  delay: 0.8,
-                  duration: 1.2,
-                  ease: "easeInOut",
-                }}
-                style={{
-                  height: 1,
-                  marginTop: 26,
-                  background:
-                    "rgba(185,238,145,0.5)",
-                }}
-              />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-    </div>
+    </motion.div>
   );
 }

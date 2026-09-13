@@ -2073,3 +2073,80 @@
             padding: 16px;
           }
         }
+
+
+/* =========================================
+   RESPONSIVE WIDE PROFILE STYLES
+   ========================================= */
+
+.profile-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 850px; /* Diperlebar dari 520px agar nyaman di layar besar */
+  margin: 0 auto;
+  padding: 30px 20px 60px;
+}
+
+/* Banner Profil Atas */
+.profile-header-card {
+  background: #b2c7b5;
+  border-radius: 24px 24px 0 0;
+  padding: 40px 30px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  border: 1px solid #c2d5c5;
+  border-bottom: none;
+}
+
+/* Kotak 3 Menu Utama (Dompet, Poin, Voucher) */
+.profile-wallet-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  background: #ffffff;
+  border-radius: 0 0 24px 24px;
+  padding: 22px 20px;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+  border: 1px solid #c2d5c5;
+  border-top: 1px solid #e1eade;
+}
+
+/* Kotak Menu Pesanan Saya */
+.profile-card-box {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 24px 22px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+  border: 1px solid #c2d5c5;
+}
+
+.profile-orders-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  text-align: center;
+}
+
+/* Penyesuaian untuk Tampilan Mobile / HP kecil */
+@media (max-width: 600px) {
+  .profile-section {
+    max-width: 100%;
+    padding: 20px 15px 40px;
+  }
+  
+  .profile-header-card {
+    padding: 25px 20px;
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .profile-wallet-grid {
+    grid-template-columns: 1fr; /* Menumpuk di HP jika layar sangat kecil, atau biarkan 3 kolom kecil */
+    gap: 15px;
+  }
+}

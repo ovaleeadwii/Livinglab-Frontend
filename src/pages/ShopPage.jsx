@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import "../index.css";
 
 import logoImg from '../assets/logo.svg';
@@ -60,7 +61,7 @@ function ProductCard({ item, qty = 0, onRequestAdd, onAddToCart, onRemoveFromCar
   );
 }
 
-export default function ShopPage({ setPage, user }) {
+export default function ShopPage({ setPage, user, onCreateOrder }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [filterCategory, setFilterCategory] = useState("Semua");
   const [sortBy, setSortBy] = useState("terbaru");
@@ -70,6 +71,21 @@ export default function ShopPage({ setPage, user }) {
   const [activePanel, setActivePanel] = useState(null);
   const [pendingProduct, setPendingProduct] = useState(null);
   const [pendingQty, setPendingQty] = useState(1);
+  const [paymentMethod, setPaymentMethod] = useState("Transfer Bank / Virtual Account");
+
+  // State Manajemen Buku Alamat (Saved Addresses)
+  const [savedAddresses, setSavedAddresses] = useState([
+    { id: 1, label: "Rumah Utama", detail: "Jl. Raya Gisting Atas No. 45, RT 02/RW 01, Kec. Gisting, Tanggamus, Lampung" },
+    { id: 2, label: "Greenhouse Gisting (GH-01)", detail: "Komplek Pertanian Hidroponik Blok C, Kec. Gisting, Tanggamus, Lampung" }
+  ]);
+  const [selectedAddressId, setSelectedAddressId] = useState(1);
+  const [isAddingNewAddress, setIsAddingNewAddress] = useState(false);
+  const [newAddressLabel, setNewAddressLabel] = useState("");
+  const [newAddressDetail, setNewAddressDetail] = useState("");
+
+  const handleMarketplace = () => {
+    setPage('shop');
+  };
 
   const bestSellers = [
     { 
@@ -319,8 +335,50 @@ export default function ShopPage({ setPage, user }) {
     setActivePanel("checkout");
   };
 
+  const selectedPluginCategoryFallback = (item) => {
+    return item.category || "Produk Greenhouse";
+  };
+
+  const handleSaveNewAddress = () => {
+    if (!newAddressLabel || !newAddressDetail) {
+      alert("Harap isi label dan detail alamat terlebih dahulu!");
+      return;
+    }
+    const newObj = {
+      id: Date.now(),
+      label: newAddressLabel,
+      detail: newAddressDetail
+    };
+    setSavedAddresses(prev => [...prev, newObj]);
+    setSelectedAddressId(newObj.id);
+    setNewAddressLabel("");
+    setNewAddressDetail("");
+    setIsAddingNewAddress(false);
+  };
+
+  const handleCreateOrderSubmit = () => {
+    if (!cartItems.length) return;
+    const selectedAddrObj = savedAddresses.find(a => a.id === selectedAddressId);
+    
+    // Meneruskan data pesanan ke fungsi global App.jsx
+    if (onCreateOrder) {
+      onCreateOrder(cartItems, paymentMethod, selectedAddrObj);
+    }
+    
+    // Kosongkan keranjang dan arahkan panel ke pemberitahuan sukses (TETAP DI HALAMAN SHOP)
+    setCart({});
+    setActivePanel("orders"); // Tetap di modal panel pesanan, tidak pindah halaman!
+  };
+
   return (
-    <div className="landing-container shop-page-responsive">
+    <motion.div 
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className="landing-container shop-page-responsive"
+      style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}
+    >
       <style>{`
         * { box-sizing: border-box; }
 
@@ -356,7 +414,6 @@ export default function ShopPage({ setPage, user }) {
           min-width: 0;
         }
 
-        {/* Hero Banner: Latar Belakang & Karakter Petani Terpisah */}
         .shop-page-responsive .hero {
           width: calc(100% - 48px);
           max-width: 1320px;
@@ -441,545 +498,6 @@ export default function ShopPage({ setPage, user }) {
           max-width: 1320px;
           margin-left: auto;
           margin-right: auto;
-        }
-
-        .shop-page-responsive .best-seller-grid,
-        .shop-page-responsive .all-products-grid {
-          width: 100%;
-          min-width: 0;
-        }
-
-        .shop-page-responsive .shop-product-card {
-          min-width: 0;
-        }
-
-        .shop-page-responsive .shop-product-img {
-          overflow: hidden;
-        }
-
-        .shop-page-responsive .shop-product-img img {
-          width: 100%;
-          height: 100%;
-          object-fit: contain;
-        }
-
-        .shop-page-responsive .filter-controls {
-          min-width: 0;
-          flex-wrap: wrap;
-        }
-
-        .shop-page-responsive .filter-dropdown-wrapper,
-        .shop-page-responsive .filter-select-native {
-          min-width: 0;
-          max-width: 100%;
-        }
-
-        .shop-page-responsive .footer-grid {
-          width: 100%;
-          min-width: 0;
-        }
-
-        .shop-page-responsive .footer-col,
-        .shop-page-responsive .footer-brand {
-          min-width: 0;
-        }
-
-        .shop-menu-drawer,
-        .shop-cart-drawer {
-          width: min(440px, 94vw) !important;
-          max-width: 100vw;
-        }
-
-        .shop-panel {
-          width: min(520px, 94vw) !important;
-          max-width: 100%;
-        }
-
-        .shop-confirm-modal {
-          width: min(470px, 94vw) !important;
-          max-width: 100%;
-        }
-
-        .shop-cart-item {
-          min-width: 0;
-        }
-
-        .shop-cart-item-total {
-          white-space: nowrap;
-        }
-
-        .shop-confirm-product {
-          min-width: 0;
-        }
-
-        @media (max-width: 1200px) {
-          .shop-page-responsive .topbar {
-            gap: 16px;
-          }
-
-          .shop-page-responsive .search {
-            flex: 1 1 320px;
-            min-width: 260px;
-          }
-
-          .shop-page-responsive .actions {
-            gap: 8px;
-          }
-
-          .shop-page-responsive .action-item .label {
-            display: none;
-          }
-
-          .shop-page-responsive .action-item {
-            min-width: auto;
-          }
-
-          .shop-page-responsive .hero {
-            padding: 34px 32px;
-          }
-
-          .shop-page-responsive .best-seller-grid,
-          .shop-page-responsive .all-products-grid {
-            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-          }
-
-          .shop-page-responsive .footer-grid {
-            grid-template-columns: 1.5fr repeat(2, 1fr) !important;
-            row-gap: 32px;
-          }
-        }
-
-        @media (max-width: 900px) {
-          .shop-page-responsive .topbar {
-            padding: 14px 20px;
-            flex-wrap: wrap;
-          }
-
-          .shop-page-responsive .logo {
-            flex: 0 0 auto;
-          }
-
-          .shop-page-responsive .logo-badge {
-            width: 52px !important;
-            height: 52px !important;
-            min-width: 52px !important;
-          }
-
-          .shop-page-responsive .logo-text .tag {
-            font-size: 11px;
-          }
-
-          .shop-page-responsive .search {
-            order: 3;
-            flex: 1 1 100%;
-            width: 100%;
-            min-width: 0;
-          }
-
-          .shop-page-responsive .actions {
-            margin-left: auto;
-          }
-
-          .shop-page-responsive .hero {
-            flex-direction: column !important;
-            gap: 20px;
-            padding: 28px 20px !important;
-            text-align: center;
-          }
-
-          .shop-page-responsive .hero-right-content {
-            text-align: center;
-            max-width: 100%;
-          }
-
-          .shop-page-responsive .hero-tag {
-            margin-left: auto;
-            margin-right: auto;
-          }
-
-          .shop-page-responsive .hero-left-character {
-            min-height: 180px;
-            max-height: 220px;
-            width: 100%;
-          }
-
-          .shop-page-responsive .character-img {
-            max-width: 240px;
-          }
-
-          .shop-page-responsive .shop-categories-bar {
-            display: grid !important;
-            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-            gap: 12px !important;
-            padding: 20px !important;
-          }
-
-          .shop-page-responsive .shop-cat-item {
-            min-width: 0;
-            justify-content: center;
-          }
-
-          .shop-page-responsive .best-seller-grid,
-          .shop-page-responsive .all-products-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-          }
-
-          .shop-page-responsive .best-seller-section,
-          .shop-page-responsive .all-products-section {
-            padding-left: 20px !important;
-            padding-right: 20px !important;
-          }
-
-          .shop-page-responsive .service-features-banner {
-            display: grid !important;
-            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-            gap: 16px !important;
-            padding: 24px 20px !important;
-          }
-
-          .shop-page-responsive .footer {
-            padding-left: 24px !important;
-            padding-right: 24px !important;
-          }
-
-          .shop-page-responsive .footer-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-          }
-        }
-
-        @media (max-width: 600px) {
-          .shop-page-responsive {
-            font-size: 14px;
-          }
-
-          .shop-page-responsive .topbar {
-            padding: 10px 14px 14px;
-            gap: 10px;
-          }
-
-          .shop-page-responsive .logo-text {
-            margin-left: 8px !important;
-          }
-
-          .shop-page-responsive .logo-text .main {
-            font-size: 22px !important;
-          }
-
-          .shop-page-responsive .logo-text .tag {
-            display: none;
-          }
-
-          .shop-page-responsive .logo-badge {
-            width: 46px !important;
-            height: 46px !important;
-            min-width: 46px !important;
-          }
-
-          .shop-page-responsive .actions {
-            gap: 5px;
-          }
-
-          .shop-page-responsive .actions > .action-item {
-            padding: 0 !important;
-          }
-
-          .shop-page-responsive .actions .icon {
-            width: 38px !important;
-            height: 38px !important;
-          }
-
-          .shop-page-responsive .actions > button:last-child {
-            width: 40px !important;
-            height: 40px !important;
-          }
-
-          .shop-page-responsive .search {
-            height: 44px !important;
-          }
-
-          .shop-page-responsive .search input {
-            width: 100%;
-            padding-left: 13px !important;
-            font-size: 13px !important;
-          }
-
-          .shop-page-responsive .search .cat {
-            display: none !important;
-          }
-
-          .shop-page-responsive .search button {
-            width: 46px !important;
-            min-width: 46px !important;
-          }
-
-          .shop-page-responsive .hero {
-            width: calc(100% - 16px);
-            border-radius: 16px !important;
-            padding: 20px 16px !important;
-            margin: 10px auto;
-          }
-
-          .shop-page-responsive .hero-right-content h1 {
-            font-size: 22px !important;
-            margin-bottom: 6px !important;
-          }
-
-          .shop-page-responsive .hero-right-content p {
-            font-size: 12px !important;
-            line-height: 1.5 !important;
-          }
-
-          .shop-page-responsive .hero-left-character {
-            min-height: 140px;
-            max-height: 170px;
-          }
-
-          .shop-page-responsive .character-img {
-            max-width: 190px !important;
-          }
-
-          .shop-page-responsive .shop-categories-bar {
-            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-            gap: 10px !important;
-            padding: 14px !important;
-          }
-
-          .shop-page-responsive .shop-cat-item {
-            padding: 10px 8px !important;
-            gap: 8px !important;
-          }
-
-          .shop-page-responsive .cat-icon-circle {
-            width: 42px !important;
-            height: 42px !important;
-            min-width: 42px !important;
-          }
-
-          .shop-page-responsive .cat-text {
-            font-size: 12px !important;
-          }
-
-          .shop-page-responsive .best-seller-section,
-          .shop-page-responsive .all-products-section {
-            padding: 28px 12px !important;
-          }
-
-          .shop-page-responsive .best-seller-header,
-          .shop-page-responsive .all-products-header {
-            gap: 12px;
-            flex-wrap: wrap;
-          }
-
-          .shop-page-responsive .best-seller-header h2,
-          .shop-page-responsive .all-products-header h2 {
-            font-size: 25px !important;
-          }
-
-          .shop-page-responsive .filter-controls {
-            width: 100%;
-            display: grid !important;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-          }
-
-          .shop-page-responsive .filter-dropdown-wrapper,
-          .shop-page-responsive .filter-select-native {
-            width: 100% !important;
-          }
-
-          .shop-page-responsive .best-seller-grid,
-          .shop-page-responsive .all-products-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-            gap: 10px !important;
-          }
-
-          .shop-page-responsive .shop-product-card {
-            border-radius: 15px !important;
-            padding: 8px !important;
-          }
-
-          .shop-page-responsive .shop-product-img {
-            height: 145px !important;
-            border-radius: 11px !important;
-          }
-
-          .shop-page-responsive .shop-product-details {
-            gap: 6px !important;
-            padding: 8px 3px 4px !important;
-          }
-
-          .shop-page-responsive .prod-title {
-            font-size: 14px !important;
-            line-height: 1.25 !important;
-          }
-
-          .shop-page-responsive .prod-cat {
-            font-size: 11px !important;
-          }
-
-          .shop-page-responsive .prod-price {
-            font-size: 14px !important;
-          }
-
-          .shop-page-responsive .shop-cart-btn {
-            width: 38px !important;
-            height: 38px !important;
-            min-width: 38px !important;
-          }
-
-          .shop-page-responsive .qty-control-box {
-            gap: 5px !important;
-          }
-
-          .shop-page-responsive .qty-btn {
-            width: 28px !important;
-            height: 28px !important;
-          }
-
-          .shop-page-responsive .qty-number {
-            min-width: 20px !important;
-          }
-
-          .shop-page-responsive .service-features-banner {
-            grid-template-columns: 1fr !important;
-            padding: 20px 14px !important;
-          }
-
-          .shop-page-responsive .service-feature-item {
-            width: 100%;
-          }
-
-          .shop-page-responsive .footer {
-            padding: 36px 18px 22px !important;
-          }
-
-          .shop-page-responsive .footer-grid {
-            grid-template-columns: 1fr !important;
-            gap: 28px !important;
-          }
-
-          .shop-page-responsive .footer-brand {
-            align-items: flex-start;
-          }
-
-          .shop-page-responsive .footer-brand-icon {
-            width: 54px !important;
-            height: 54px !important;
-            min-width: 54px !important;
-          }
-
-          .shop-menu-drawer,
-          .shop-cart-drawer {
-            width: 100% !important;
-            max-width: 100% !important;
-          }
-
-          .shop-panel {
-            width: calc(100% - 20px) !important;
-            max-height: 92vh !important;
-            padding: 18px !important;
-            border-radius: 17px !important;
-          }
-
-          .shop-confirm-modal {
-            width: calc(100% - 20px) !important;
-            padding: 18px !important;
-            border-radius: 17px !important;
-          }
-
-          .shop-confirm-product {
-            grid-template-columns: 64px minmax(0, 1fr) !important;
-            padding: 10px !important;
-          }
-
-          .shop-confirm-product > div:first-child {
-            width: 64px !important;
-            height: 64px !important;
-          }
-
-          .shop-confirm-actions {
-            grid-template-columns: 1fr !important;
-          }
-
-          .shop-cart-item {
-            grid-template-columns: 54px minmax(0, 1fr) !important;
-          }
-
-          .shop-cart-item > .shop-cart-item-total {
-            grid-column: 2;
-            justify-self: start;
-            margin-top: -4px;
-          }
-
-          .shop-cart-item > div:first-child {
-            width: 54px !important;
-            height: 54px !important;
-          }
-
-          .shop-cart-drawer > div:first-child {
-            padding: 18px 16px !important;
-          }
-
-          .shop-cart-drawer > div:nth-child(2) {
-            padding: 14px !important;
-          }
-
-          .shop-cart-drawer > div:last-child {
-            padding: 16px !important;
-          }
-        }
-
-        @media (max-width: 380px) {
-          .shop-page-responsive .logo-text .main {
-            font-size: 19px !important;
-          }
-
-          .shop-page-responsive .actions .icon {
-            width: 34px !important;
-            height: 34px !important;
-          }
-
-          .shop-page-responsive .actions > button:last-child {
-            width: 36px !important;
-            height: 36px !important;
-          }
-
-          .shop-page-responsive .best-seller-grid,
-          .shop-page-responsive .all-products-grid {
-            grid-template-columns: 1fr !important;
-          }
-
-          .shop-page-responsive .shop-product-img {
-            height: 190px !important;
-          }
-
-          .shop-page-responsive .filter-controls {
-            grid-template-columns: 1fr;
-          }
-        }
-
-        @media (min-width: 1600px) {
-          .shop-page-responsive .topbar {
-            padding-left: clamp(28px, 3vw, 60px);
-            padding-right: clamp(28px, 3vw, 60px);
-          }
-
-          .shop-page-responsive .best-seller-section,
-          .shop-page-responsive .all-products-section {
-            padding-left: clamp(30px, 3vw, 60px) !important;
-            padding-right: clamp(30px, 3vw, 60px) !important;
-          }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .shop-page-responsive *,
-          .shop-page-responsive *::before,
-          .shop-page-responsive *::after {
-            scroll-behavior: auto !important;
-            transition-duration: 0.01ms !important;
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-          }
         }
 
         .shop-menu-btn {
@@ -1193,56 +711,34 @@ export default function ShopPage({ setPage, user }) {
         </div>
       </header>
 
-      
-      {/* Hero / Banner Shop: Background Hijau Tua & Karakter Petani Terpisah */}
+      {/* Hero / Banner Shop */}
       <section className="hero shop-landing-hero">
-  <div className="hero-left-character">
-    {/* Bungkus gambar sayur dan siluet dalam container relatif */}
-    <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
-      
-      {/* Siluet Putih (di belakang, dibuat lebih besar agar terlihat efek 'glow'-nya) */}
-      <div style={{
-        position: 'absolute',
-        // Posisikan sedikit ke bawah agar pas dengan dasar gambar sayur
-        bottom: '-5%', 
-        left: '50%',
-        transform: 'translateX(-50%)',
-        width: '340px', // Sesuaikan ukuran dasar, misal 110% dari gambar sayur
-        height: '340px',
-        background: 'rgba(255, 255, 255, 0.18)', // Putih transparan
-        borderRadius: '50%',
-        filter: 'blur(25px)', // Efek blur untuk siluet cahaya
-        zIndex: 1, // Di belakang sayuran
-      }}/>
+        <div className="hero-left-character">
+          <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
+            <img 
+              src={heroImg} 
+              alt="Sayuran Segar Hidroponik" 
+              className="character-img" 
+              style={{
+                position: 'relative',
+                zIndex: 2,
+                width: '100%',
+                maxWidth: '420px', 
+                height: 'auto',
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.15))',
+                marginBottom: '0', 
+              }}
+            />
+          </div>
+        </div>
 
-      {/* Gambar Sayuran (di depan, dibuat lebih besar dan full) */}
-      <img 
-        src={heroImg} 
-        alt="Sayuran Segar Hidroponik" 
-        className="character-img" 
-        style={{
-          position: 'relative',
-          zIndex: 2, // Di depan siluet
-          width: '100%',
-          // Ukuran maksimum gambar dibuat lebih besar dari sebelumnya (misal dari 340px ke 400px)
-          maxWidth: '420px', 
-          height: 'auto',
-          objectFit: 'contain',
-          // Hapus atau kurangi drop-shadow standar agar siluet putih lebih dominan
-          filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.15))', 
-          // Pastikan gambar menyentuh dasar container
-          marginBottom: '0', 
-        }}
-      />
-    </div>
-  </div>
-
-  <div className="hero-right-content">
-    <div className="hero-tag">🌱 Hidroponik &amp; Segar</div>
-    <h1>Kebutuhan Hidroponik Terbaik<br />Langsung dari Kebun</h1>
-    <p>Temukan berbagai pilihan sayuran segar, media tanam berkualitas tinggi, dan nutrisi hidroponik standar industri.</p>
-  </div>
-</section>
+        <div className="hero-right-content">
+          <div className="hero-tag">🌱 Hidroponik &amp; Segar</div>
+          <h1>Kebutuhan Hidroponik Terbaik<br />Langsung dari Kebun</h1>
+          <p>Temukan berbagai pilihan sayuran segar, media tanam berkualitas tinggi, dan nutrisi hidroponik standar industri.</p>
+        </div>
+      </section>
 
       {/* Kategori Bar */}
       <section className="shop-categories-bar">
@@ -1355,12 +851,9 @@ export default function ShopPage({ setPage, user }) {
       </section>
 
       {/* BANNER LAYANAN */}
-      {/* BANNER LAYANAN - Ikon Profesional */}
       <section className="service-features-banner">
-        {/* Fitur 1: Produk Berkualitas */}
         <div className="service-feature-item">
           <div className="service-icon-circle">
-            {/* Ikon: Lencana/Medali Kualitas (Ribbon Badge) */}
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="8" r="7"></circle>
               <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
@@ -1372,10 +865,8 @@ export default function ShopPage({ setPage, user }) {
           </div>
         </div>
 
-        {/* Fitur 2: Pengiriman Cepat */}
         <div className="service-feature-item">
           <div className="service-icon-circle">
-            {/* Ikon: Truk Pengiriman dengan Aksen Cepat */}
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="1" y="3" width="15" height="13"></rect>
               <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
@@ -1389,10 +880,8 @@ export default function ShopPage({ setPage, user }) {
           </div>
         </div>
 
-        {/* Fitur 3: Pembayaran Aman */}
         <div className="service-feature-item">
           <div className="service-icon-circle">
-            {/* Ikon: Perisai dengan Simbol Mata Uang/Ceklis */}
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
               <path d="M9 12l2 2 4-4"></path>
@@ -1405,422 +894,75 @@ export default function ShopPage({ setPage, user }) {
         </div>
       </section>
 
-      {/* =====================================================
-          FOOTER
-      ===================================================== */}
-
+      {/* FOOTER */}
       <motion.footer
-        initial={{
-          opacity: 0,
-        }}
-        whileInView={{
-          opacity: 1,
-        }}
-        viewport={{
-          once: true,
-        }}
-        transition={{
-          duration: 0.7,
-        }}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7 }}
         className="footer"
       >
         <div className="footer-grid">
-
-          {/* BRAND */}
-
-          <motion.div
-            className="footer-brand"
-            whileHover={{
-              y: -2,
-            }}
-          >
-            <motion.div
-              className="footer-brand-icon"
-              whileHover={{
-                scale: 1.04,
-              }}
-            >
+          <motion.div className="footer-brand" whileHover={{ y: -2 }}>
+            <motion.div className="footer-brand-icon" whileHover={{ scale: 1.04 }}>
               <img
                 src={logoImg}
                 alt="Agri-ICS"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "contain",
-                }}
+                style={{ width: "100%", height: "100%", objectFit: "contain" }}
               />
             </motion.div>
-
             <div>
-              <div className="name">
-                Living Smart
-              </div>
-
-              <div className="tag">
-                Solusi sayur segar dan sehat
-              </div>
-
+              <div className="name">Living Smart</div>
+              <div className="tag">Solusi sayur segar dan sehat</div>
               <p className="desc">
-                Menghubungkan teknologi dan pertanian
-                untuk masa depan pangan yang lebih hijau
-                dan berkelanjutan.
+                Menghubungkan teknologi dan pertanian untuk masa depan pangan yang lebih hijau dan berkelanjutan.
               </p>
             </div>
           </motion.div>
 
-          {/* QUICK LINKS */}
-
           <div className="footer-col">
             <h4>Quick links</h4>
-
-            <motion.a
-              href="#home"
-              whileHover={{
-                x: 3,
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                setPage("home");
-              }}
-            >
-              Home
-            </motion.a>
-
-            <motion.a
-              href="#dashboard"
-              whileHover={{
-                x: 3,
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                setPage("dashboard");
-              }}
-            >
-              Dashboard
-            </motion.a>
-
-            <motion.a
-              href="#shop"
-              whileHover={{
-                x: 3,
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                handleMarketplace();
-              }}
-            >
-              Shop
-            </motion.a>
+            <motion.a href="#home" whileHover={{ x: 3 }} onClick={(e) => { e.preventDefault(); setPage("home"); }}>Home</motion.a>
+            <motion.a href="#dashboard" whileHover={{ x: 3 }} onClick={(e) => { e.preventDefault(); setPage("dashboard"); }}>Dashboard</motion.a>
+            <motion.a href="#shop" whileHover={{ x: 3 }} onClick={(e) => { e.preventDefault(); handleMarketplace(); }}>Shop</motion.a>
           </div>
-
-          {/* SHOP */}
 
           <div className="footer-col">
             <h4>Shop</h4>
-
-            <motion.a
-              href="#shop"
-              whileHover={{
-                x: 3,
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                handleMarketplace();
-              }}
-            >
-              All Products
-            </motion.a>
-
-            <motion.a
-              href="#shop"
-              whileHover={{
-                x: 3,
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                handleMarketplace();
-              }}
-            >
-              Best Seller
-            </motion.a>
-
-            <motion.a
-              href="#shop"
-              whileHover={{
-                x: 3,
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                handleMarketplace();
-              }}
-            >
-              Promo
-            </motion.a>
+            <motion.a href="#shop" whileHover={{ x: 3 }} onClick={(e) => { e.preventDefault(); handleMarketplace(); }}>All Products</motion.a>
+            <motion.a href="#shop" whileHover={{ x: 3 }} onClick={(e) => { e.preventDefault(); handleMarketplace(); }}>Best Seller</motion.a>
+            <motion.a href="#shop" whileHover={{ x: 3 }} onClick={(e) => { e.preventDefault(); handleMarketplace(); }}>Promo</motion.a>
           </div>
-
-          {/* INFORMATION */}
 
           <div className="footer-col">
             <h4>Information</h4>
-
-            <motion.a
-              href="#faq"
-              whileHover={{
-                x: 3,
-              }}
-            >
-              FAQ
-            </motion.a>
-
-            <motion.a
-              href="#terms"
-              whileHover={{
-                x: 3,
-              }}
-            >
-              Terms &amp; Conditions
-            </motion.a>
-
-            <motion.a
-              href="#privacy"
-              whileHover={{
-                x: 3,
-              }}
-            >
-              Privacy Policy
-            </motion.a>
+            <motion.a href="#faq" whileHover={{ x: 3 }}>FAQ</motion.a>
+            <motion.a href="#terms" whileHover={{ x: 3 }}>Terms &amp; Conditions</motion.a>
+            <motion.a href="#privacy" whileHover={{ x: 3 }}>Privacy Policy</motion.a>
           </div>
-
-          {/* CONTACT */}
 
           <div className="footer-col">
             <h4>Contact Us</h4>
-
-            <motion.div
-              className="footer-contact-item"
-              whileHover={{
-                x: 3,
-              }}
-            >
-              📍 Gisting, Tanggamus
-            </motion.div>
-
-            <motion.div
-              className="footer-contact-item"
-              whileHover={{
-                x: 3,
-              }}
-            >
-              📞 +62 812 3456 7890
-            </motion.div>
-
-            <motion.div
-              className="footer-contact-item"
-              whileHover={{
-                x: 3,
-              }}
-            >
-              ✉️ Livingmart@gmail.com
-            </motion.div>
+            <motion.div className="footer-contact-item" whileHover={{ x: 3 }}>📍 Gisting, Tanggamus</motion.div>
+            <motion.div className="footer-contact-item" whileHover={{ x: 3 }}>📞 +62 812 3456 7890</motion.div>
+            <motion.div className="footer-contact-item" whileHover={{ x: 3 }}>✉️ Livingmart@gmail.com</motion.div>
           </div>
-
         </div>
 
         <div
           style={{
             marginTop: 32,
             paddingTop: 18,
-            borderTop:
-              "1px solid rgba(255,255,255,0.08)",
+            borderTop: "1px solid rgba(255,255,255,0.08)",
             textAlign: "center",
-            color:
-              "rgba(255,255,255,0.32)",
+            color: "rgba(255,255,255,0.32)",
             fontSize: 11,
           }}
         >
           Smart Agriculture • IoT • LivingLab
         </div>
       </motion.footer>
-      </motion.div>
 
-      <AnimatePresence>
-        {showIntro && (
-          <motion.div
-            initial={{ opacity: 1 }}
-            exit={{
-              opacity: 0,
-              transition: {
-                duration: 0.8,
-                ease: [0.22, 1, 0.36, 1],
-              },
-            }}
-            style={{
-              position: "fixed",
-              inset: 0,
-              width: "100vw",
-              height: "100dvh",
-              zIndex: 999999,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              overflow: "hidden",
-              background:
-                "linear-gradient(135deg, #092B17 0%, #123D22 55%, #17351E 100%)",
-            }}
-          >
-            <motion.div
-              animate={{
-                opacity: [0.12, 0.27, 0.12],
-                scale: [0.84, 1.08, 0.84],
-              }}
-              transition={{
-                duration: 2.6,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              style={{
-                position: "absolute",
-                left: "50%",
-                top: "50%",
-                width: 320,
-                height: 320,
-                transform: "translate(-50%, -50%)",
-                borderRadius: "50%",
-                background: "#B9EE91",
-                filter: "blur(100px)",
-              }}
-            />
-
-            <motion.div
-              initial={{
-                opacity: 0,
-                scale: 0.82,
-                y: 12,
-              }}
-              animate={{
-                opacity: 1,
-                scale: 1,
-                y: 0,
-              }}
-              exit={{
-                opacity: 0,
-                scale: 0.96,
-                y: -7,
-              }}
-              transition={{
-                duration: 0.8,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              style={{
-                position: "relative",
-                zIndex: 2,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                textAlign: "center",
-              }}
-            >
-              <motion.div
-                animate={{
-                  scale: [1, 1.035, 1],
-                }}
-                transition={{
-                  duration: 1.8,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                style={{
-                  width: 120,
-                  height: 120,
-                  padding: 8,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: "50%",
-                  background: "#FFFFFF",
-                  boxShadow:
-                    "0 0 70px rgba(185,238,145,0.22)",
-                }}
-              >
-                <img
-                  src={logoImg}
-                  alt="Agri-ICS"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "contain",
-                  }}
-                />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  delay: 0.3,
-                  duration: 0.6,
-                }}
-                style={{
-                  marginTop: 22,
-                  color: "#FFFFFF",
-                  fontSize: 30,
-                  fontWeight: 700,
-                  letterSpacing: "0.08em",
-                }}
-              >
-                AGRI
-                <span style={{ color: "#B9EE91" }}>
-                  -ICS
-                </span>
-              </motion.div>
-
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{
-                  delay: 0.55,
-                  duration: 0.6,
-                }}
-                style={{
-                  margin: "7px 0 0",
-                  color: "rgba(255,255,255,0.48)",
-                  fontSize: 11,
-                  letterSpacing: "0.22em",
-                }}
-              >
-                SMART AGRICULTURE • IoT • LIVINGLAB
-              </motion.p>
-
-              <motion.div
-                initial={{
-                  width: 0,
-                  opacity: 0,
-                }}
-                animate={{
-                  width: 80,
-                  opacity: 1,
-                }}
-                transition={{
-                  delay: 0.8,
-                  duration: 1.2,
-                  ease: "easeInOut",
-                }}
-                style={{
-                  height: 1,
-                  marginTop: 26,
-                  background:
-                    "rgba(185,238,145,0.5)",
-                }}
-              />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-    </div>
-  );
-}
       {/* DRAWER MENU */}
       {isMenuOpen && (
         <div
@@ -2029,7 +1171,7 @@ export default function ShopPage({ setPage, user }) {
             onClick={(e) => e.stopPropagation()}
             className="shop-panel"
             style={{
-              width: "min(520px, 94vw)",
+              width: "min(540px, 94vw)",
               maxHeight: "88vh",
               overflowY: "auto",
               background: "#fff",
@@ -2042,7 +1184,7 @@ export default function ShopPage({ setPage, user }) {
               <h3 style={{ margin: 0, color: "#173524", fontSize: 22 }}>
                 {activePanel === "saldo" && "Saldo Saya"}
                 {activePanel === "orders" && "Pesanan Saya"}
-                {activePanel === "checkout" && "Checkout"}
+                {activePanel === "checkout" && "Checkout & Pengiriman"}
               </h3>
               <button
                 type="button"
@@ -2071,59 +1213,134 @@ export default function ShopPage({ setPage, user }) {
 
             {activePanel === "orders" && (
               <div style={{ textAlign: "center", padding: "30px 10px", color: "#68756c" }}>
-                <div style={{ fontSize: 42, marginBottom: 10 }}>📦</div>
-                <strong style={{ display: "block", color: "#173524", marginBottom: 6 }}>Belum ada pesanan</strong>
-                <span>Pesanan yang sudah checkout akan muncul di sini.</span>
+                <div style={{ fontSize: 42, marginBottom: 10 }}>🎉</div>
+                <strong style={{ display: "block", color: "#173524", marginBottom: 6 }}>Pesanan Berhasil Dibuat!</strong>
+                <span>Pesanan Anda telah tercatat dan masuk ke daftar <strong>Belum Dibayar</strong>. Anda bisa memeriksanya nanti melalui menu Profil.</span>
+                <button
+                  type="button"
+                  onClick={() => setActivePanel(null)}
+                  style={{ marginTop: 20, width: "100%", padding: 11, borderRadius: 10, background: "#176137", color: "#fff", fontWeight: "700", border: "none", cursor: "pointer" }}
+                >
+                  Lanjut Belanja Lagi ✓
+                </button>
               </div>
             )}
 
             {activePanel === "checkout" && (
-              <div>
-                <div style={{ display: "grid", gap: 10, marginBottom: 18 }}>
+              <div style={{ display: "grid", gap: 16 }}>
+                {/* Ringkasan Produk */}
+                <div style={{ display: "grid", gap: 8, paddingBottom: 12, borderBottom: "1px solid #edf1ed" }}>
+                  <div style={{ fontSize: "13px", fontWeight: "800", color: "#163821" }}>📦 Ringkasan Belanja:</div>
                   {cartItems.map((item) => (
-                    <div key={item.name} style={{ display: "flex", justifyContent: "space-between", gap: 12, paddingBottom: 10, borderBottom: "1px solid #edf1ed" }}>
-                      <span>{item.name} × {item.qty}</span>
-                      <strong>{formatRupiah((parseInt(item.price.replace(/[^0-9]/g, ""), 10) || 0) * item.qty)}</strong>
+                    <div key={item.name} style={{ display: "flex", justifyContent: "space-between", gap: 12, fontSize: "13.5px" }}>
+                      <span style={{ color: "#334238" }}>{item.name} × {item.qty}</span>
+                      <strong style={{ color: "#163821" }}>{formatRupiah((parseInt(item.price.replace(/[^0-9]/g, ""), 10) || 0) * item.qty)}</strong>
                     </div>
                   ))}
                 </div>
 
-                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 18, color: "#173524", marginBottom: 18 }}>
-                  <strong>Total Pembayaran</strong>
-                  <strong>{formatRupiah(cartTotal)}</strong>
+                {/* Bagian Alamat Pengiriman Tersimpan / Buku Alamat */}
+                <div style={{ display: "grid", gap: 8 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <label style={{ fontSize: "13px", fontWeight: "800", color: "#163821" }}>📍 Pilih Alamat Pengiriman:</label>
+                    <button 
+                      type="button"
+                      onClick={() => setIsAddingNewAddress(!isAddingNewAddress)}
+                      style={{ background: "transparent", border: "none", color: "#176137", fontSize: "12px", fontWeight: "700", cursor: "pointer", textDecoration: "underline" }}
+                    >
+                      {isAddingNewAddress ? "Batal Tambah" : "+ Tambah Alamat Baru"}
+                    </button>
+                  </div>
+
+                  {!isAddingNewAddress ? (
+                    <div style={{ display: "grid", gap: "8px" }}>
+                      {savedAddresses.map((addr) => (
+                        <div 
+                          key={addr.id}
+                          onClick={() => setSelectedAddressId(addr.id)}
+                          style={{
+                            padding: "12px 14px",
+                            borderRadius: "12px",
+                            border: selectedAddressId === addr.id ? "2px solid #163821" : "1px solid #dce5de",
+                            background: selectedAddressId === addr.id ? "#f4f8f5" : "#fff",
+                            cursor: "pointer",
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "3px"
+                          }}
+                        >
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                            <strong style={{ fontSize: "13px", color: "#163821" }}>{addr.label}</strong>
+                            {selectedAddressId === addr.id && <span style={{ fontSize: "11px", background: "#163821", color: "#fff", padding: "2px 8px", borderRadius: "6px", fontWeight: "700" }}>Utama</span>}
+                          </div>
+                          <span style={{ fontSize: "12px", color: "#55635a", lineHeight: "1.4" }}>{addr.detail}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div style={{ background: "#f9fbf9", padding: "14px", borderRadius: "14px", border: "1px solid #c2d5c5", display: "grid", gap: "10px" }}>
+                      <div style={{ fontSize: "12.5px", fontWeight: "700", color: "#163821" }}>Form Simpan Alamat Baru</div>
+                      <input 
+                        type="text"
+                        placeholder="Label Alamat (Contoh: Rumah, Kantor, Kosan)"
+                        value={newAddressLabel}
+                        onChange={(e) => setNewAddressLabel(e.target.value)}
+                        style={{ padding: "10px 12px", borderRadius: "8px", border: "1px solid #dce5de", fontSize: "13px", outline: "none" }}
+                      />
+                      <textarea 
+                        rows="2"
+                        placeholder="Detail Alamat: Nama Jalan, No. Rumah, RT/RW, Patokan khusus..."
+                        value={newAddressDetail}
+                        onChange={(e) => setNewAddressDetail(e.target.value)}
+                        style={{ padding: "10px 12px", borderRadius: "8px", border: "1px solid #dce5de", fontSize: "13px", outline: "none", resize: "none" }}
+                      />
+                      <button 
+                        type="button"
+                        onClick={handleSaveNewAddress}
+                        style={{ padding: "9px 16px", background: "#163821", color: "#fff", border: "none", borderRadius: "8px", fontWeight: "700", fontSize: "12px", cursor: "pointer", justifySelf: "start" }}
+                      >
+                        Simpan Alamat ke Buku Alamat ✓
+                      </button>
+                    </div>
+                  )}
                 </div>
 
-                <div style={{ display: "grid", gap: 10 }}>
-                  <input
-                    placeholder="Alamat pengiriman"
-                    style={{ width: "100%", boxSizing: "border-box", padding: 12, border: "1px solid #dce5de", borderRadius: 10 }}
-                  />
-                  <select style={{ width: "100%", padding: 12, border: "1px solid #dce5de", borderRadius: 10, background: "#fff" }}>
-                    <option>Pilih metode pembayaran</option>
-                    <option>Saldo AGRI-ICS</option>
-                    <option>Transfer Bank</option>
-                    <option>QRIS</option>
-                  </select>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setCart({});
-                      setActivePanel("orders");
-                    }}
-                    style={{
-                      width: "100%",
-                      padding: 13,
-                      border: "none",
-                      borderRadius: 11,
-                      background: "#176137",
-                      color: "#fff",
-                      fontWeight: 800,
-                      cursor: "pointer",
-                    }}
+                {/* Metode Pembayaran */}
+                <div style={{ display: "grid", gap: 6 }}>
+                  <label style={{ fontSize: "13px", fontWeight: "800", color: "#163821" }}>💳 Metode Pembayaran:</label>
+                  <select 
+                    value={paymentMethod} 
+                    onChange={(e) => setPaymentMethod(e.target.value)}
+                    style={{ width: "100%", padding: 12, border: "1px solid #dce5de", borderRadius: 10, background: "#fff", fontWeight: "600", fontSize: "13px" }}
                   >
-                    Buat Pesanan
-                  </button>
+                    <option value="Transfer Bank / Virtual Account">Transfer Bank / Virtual Account (Belum Bayar / Pending)</option>
+                    <option value="Saldo AGRI-ICS">Saldo AGRI-ICS</option>
+                    <option value="QRIS Instan">QRIS Instan</option>
+                  </select>
                 </div>
+
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 17, color: "#173524", borderTop: "1px solid #edf1ed", paddingTop: "10px" }}>
+                  <strong>Total Pembayaran</strong>
+                  <strong style={{ color: "#163821" }}>{formatRupiah(cartTotal)}</strong>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleCreateOrderSubmit}
+                  style={{
+                    width: "100%",
+                    padding: 13,
+                    border: "none",
+                    borderRadius: 11,
+                    background: "#163821",
+                    color: "#fff",
+                    fontWeight: 800,
+                    cursor: "pointer",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.15)"
+                  }}
+                >
+                  Buat Pesanan Sekarang ✓
+                </button>
               </div>
             )}
           </div>
@@ -2360,7 +1577,7 @@ export default function ShopPage({ setPage, user }) {
                       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ verticalAlign: '-2px', marginRight: '6px' }}>
                         {selectedProduct.category === "Sayuran" ? (
                           <>
-                            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
+                            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H2v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
                             <path d="M6 6h10M6 10h10"/>
                           </>
                         ) : (
@@ -2413,10 +1630,6 @@ export default function ShopPage({ setPage, user }) {
           </div>
         </div>
       )}
-    </div>
+    </motion.div>
   );
-}
-
-function selectedPluginCategoryFallback(item) {
-  return item.category || "Produk Greenhouse";
 }
