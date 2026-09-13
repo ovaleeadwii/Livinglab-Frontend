@@ -1626,46 +1626,6 @@ export default function LandingPage({ setPage, user }) {
         variants={stagger}
         className="highlights-section"
       >
-        <div className="highlights-container-slim">
-          <motion.div
-            variants={fadeUp}
-            className="stats-slim-bar"
-          >
-            <motion.div
-              className="stat-slim-item"
-              whileHover={{
-                y: -2,
-              }}
-            >
-              <strong>1Jt+</strong>
-              <span>Produk terjual</span>
-            </motion.div>
-
-            <div className="stat-divider"></div>
-
-            <motion.div
-              className="stat-slim-item"
-              whileHover={{
-                y: -2,
-              }}
-            >
-              <strong>5</strong>
-              <span>Greenhouse aktif</span>
-            </motion.div>
-
-            <div className="stat-divider"></div>
-
-            <motion.div
-              className="stat-slim-item"
-              whileHover={{
-                y: -2,
-              }}
-            >
-              <strong>99%</strong>
-              <span>Kepuasan pelanggan</span>
-            </motion.div>
-          </motion.div>
-
           <motion.div
             variants={fadeUp}
             className="testimonial-slim-bar"
