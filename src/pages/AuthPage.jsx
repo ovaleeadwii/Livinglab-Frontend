@@ -12,23 +12,70 @@ export default function AuthPage({ setPage, onLoginSuccess }) {
   const [emailInput, setEmailInput] = useState('');
   const [phoneInput, setPhoneInput] = useState('');
   const [addressInput, setAddressInput] = useState('');
+  const [passwordInput, setPasswordInput] = useState('');
+  const [confirmPasswordInput, setConfirmPasswordInput] = useState('');
 
-  const handleAuthSubmit = (e) => {
+  const handleAuthSubmit = async (e) => {
     e.preventDefault();
     
-    const dummyUser = {
-      name: nameInput ? nameInput : (isLogin ? "Anis Setiawati" : "Pengguna Baru Living Smart"),
-      email: emailInput ? emailInput : "livingmart@gmail.com",
-      phone: phoneInput ? phoneInput : "+62 812-3456-7890",
-      address: addressInput ? addressInput : "Kec. Gisting, Tanggamus, Lampung",
-      role: selectedRole,
-      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"
-    };
+    if (isLogin) {
+      // Proses Login ke Backend Laravel
+      try {
+        const response = await fetch('http://127.0.0.1:8000/api/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            email: emailInput,
+            password: passwordInput
+          })
+        });
 
-    if (onLoginSuccess) {
-      onLoginSuccess(dummyUser);
+        const data = await response.json();
+
+        if (response.ok) {
+          // Simpan token akses dari Laravel
+          localStorage.setItem('token', data.token);
+          
+          const userData = {
+            name: data.user.name,
+            email: data.user.email,
+            phone: data.user.phone || "+62 812-3456-7890",
+            address: data.user.address || "Kec. Gisting, Tanggamus, Lampung",
+            role: selectedRole,
+            avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"
+          };
+
+          if (onLoginSuccess) {
+            onLoginSuccess(userData);
+          } else {
+            setPage('home');
+          }
+        } else {
+          alert(data.message || 'Login gagal, periksa kembali email dan password Anda.');
+        }
+      } catch (error) {
+        console.error('Terjadi kesalahan koneksi ke backend:', error);
+        alert('Tidak dapat terhubung ke server backend Laravel. Pastikan server lokal (php artisan serve) sudah menyala.');
+      }
     } else {
-      setPage('home');
+      // Logika untuk pendaftaran (sementara menggunakan dummy/local data)
+      const dummyUser = {
+        name: nameInput || "Pengguna Baru Living Smart",
+        email: emailInput,
+        phone: phoneInput || "+62 812-3456-7890",
+        address: addressInput || "Kec. Gisting, Tanggamus, Lampung",
+        role: selectedRole,
+        avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"
+      };
+
+      if (onLoginSuccess) {
+        onLoginSuccess(dummyUser);
+      } else {
+        setPage('home');
+      }
     }
   };
 
@@ -140,8 +187,8 @@ export default function AuthPage({ setPage, onLoginSuccess }) {
             <div className="form-group">
               <label>Email / Akun</label>
               <input 
-                type="text" 
-                placeholder="Masukkan email atau nomor..." 
+                type="email" 
+                placeholder="Masukkan email..." 
                 value={emailInput}
                 onChange={(e) => setEmailInput(e.target.value)}
                 required 
@@ -172,13 +219,25 @@ export default function AuthPage({ setPage, onLoginSuccess }) {
 
             <div className="form-group">
               <label>Kata Sandi</label>
-              <input type="password" placeholder="Masukkan kata sandi..." required />
+              <input 
+                type="password" 
+                placeholder="Masukkan kata sandi..." 
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
+                required 
+              />
             </div>
 
             {!isLogin && (
               <div className="form-group">
                 <label>Ulangi Kata Sandi</label>
-                <input type="password" placeholder="Ulangi kata sandi..." required />
+                <input 
+                  type="password" 
+                  placeholder="Ulangi kata sandi..." 
+                  value={confirmPasswordInput}
+                  onChange={(e) => setConfirmPasswordInput(e.target.value)}
+                  required 
+                />
               </div>
             )}
 
@@ -210,9 +269,7 @@ export default function AuthPage({ setPage, onLoginSuccess }) {
         </div>
       </section>
 
-      {/* =====================================================
-          FOOTER
-      ===================================================== */}
+      {/* FOOTER */}
       <motion.footer
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
