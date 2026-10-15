@@ -1,53 +1,63 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Tooltip,
+  Legend,
+  Filler,
+} from "chart.js";
+import { Line } from "react-chartjs-2";
 import "../index.css";
 import logoImg from "../assets/logo.svg";
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, Filler);
 
 /*
   DashboardPage
   ----------------------------------------------------
-  UI dashboard greenhouse dengan struktur data yang siap
-  menerima response API/backend di kemudian hari.
+  Data live dari backend Agri-ICS (tabel gisting_data):
+  - GET {API}/gisting/latest              -> kartu, tiap 1 detik
+  - GET {API}/gisting/chart?period=1D|7D|30D -> grafik, tiap 1 menit
+  - GET {API}/gisting/download?period=... -> CSV
+  Di produksi {API} = /api (diteruskan nginx ke backend).
 */
 
-const defaultData = {
-  greenhouse: {
-    name: "Greenhouse Utama Gisting",
-    code: "GH-01",
-    status: "Online",
-    lastUpdated: "Menunggu data sensor",
-  },
-  actuators: {
-    waterPump: false,
-    uvLamp: false,
-    nutrientPump: false,
-  },
-  nutrient: {
-    tds: null,
-    waterTemperature: null,
-    ph: null,
-  },
-  microclimate: {
-    windDirection: null,
-    windSpeed: null,
-    pressure: null,
-    roomTemperature: null,
-    dhtTemperature: null,
-    humidity: null,
-    svp: null,
-    avp: null,
-    vpd: null,
-  },
-  plantNeeds: {
-    waterFlow: null,
-    soilMoisture: null,
-    weight: null,
-  },
-  charts: {
-    labels: [],
-    tds: [],
-  },
-};
+const API_BASE = (import.meta.env.VITE_API_BASE || "/api").replace(/\/$/, "");
+const LIVE_INTERVAL_MS = 1000;
+const CHART_INTERVAL_MS = 60000;
+
+const PERIODS = [
+  ["1D", "1 Day"],
+  ["7D", "7 Day"],
+  ["30D", "30 Day"],
+];
+
+const NUTRIENT_METRICS = [
+  { key: "tds", label: "TDS", unit: "ppm" },
+  { key: "ph", label: "pH", unit: "" },
+  { key: "water_temperature", label: "Suhu Air", unit: "°C" },
+  { key: "distance", label: "Jarak Muka Air", unit: "cm" },
+];
+
+const MICRO_METRICS = [
+  { key: "air_temperature", label: "Suhu Udara", unit: "°C" },
+  { key: "humidity", label: "Kelembapan", unit: "%RH" },
+  { key: "vpd", label: "VPD", unit: "kPa" },
+  { key: "co2", label: "CO₂", unit: "ppm" },
+  { key: "pressure", label: "Tekanan", unit: "hPa" },
+  { key: "solar_radiation", label: "Radiasi Matahari", unit: "W/m²" },
+  { key: "wind_speed", label: "Kecepatan Angin", unit: "m/s" },
+];
+
+const PLANT_METRICS = [
+  { key: "waterflow", label: "Waterflow", unit: "pulse/s" },
+];
+
+const COLORS = ["#176137", "#d97706"];
 
 const formatNumber = (value) => {
   if (value === null || value === undefined || value === "") return "--";
@@ -58,6 +68,60 @@ const formatNumber = (value) => {
   }
   return value;
 };
+
+const formatTime = (iso, withDate) => {
+  if (!iso) return "";
+  return new Date(iso).toLocaleString("id-ID", {
+    timeZone: "Asia/Jakarta",
+    ...(withDate ? { day: "2-digit", month: "short" } : {}),
+    hour: "2-digit",
+    minute: "2-digit",
+    second: withDate ? undefined : "2-digit",
+  });
+};
+
+const formatAge = (seconds) => {
+  if (seconds === null || seconds === undefined) return "";
+  if (seconds < 60) return `${seconds} detik lalu`;
+  if (seconds < 3600) return `${Math.floor(seconds / 60)} menit lalu`;
+  if (seconds < 86400) return `${Math.floor(seconds / 3600)} jam lalu`;
+  return `${Math.floor(seconds / 86400)} hari lalu`;
+};
+
+// Ambil data berkala; berhenti saat tab browser tidak terlihat.
+function usePolling(url, intervalMs) {
+  const [state, setState] = useState({ data: null, error: null, loading: true });
+  const busy = useRef(false);
+
+  const load = useCallback(async () => {
+    if (busy.current || document.hidden) return;
+    busy.current = true;
+    try {
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      setState({ data, error: null, loading: false });
+    } catch (err) {
+      setState((prev) => ({ ...prev, error: err.message, loading: false }));
+    } finally {
+      busy.current = false;
+    }
+  }, [url]);
+
+  useEffect(() => {
+    setState((prev) => ({ ...prev, loading: true }));
+    load();
+    const timer = setInterval(load, intervalMs);
+    const onVisible = () => !document.hidden && load();
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
+  }, [load, intervalMs]);
+
+  return state;
+}
 
 function MetricCard({ label, value, unit = "" }) {
   return (
@@ -73,23 +137,30 @@ function MetricCard({ label, value, unit = "" }) {
   );
 }
 
-function ActuatorCard({ label, active, icon }) {
+function ActuatorCard({ label, icon }) {
   return (
     <article className="pro-actuator-card">
       <div className="pro-actuator-top">
         <span className="pro-actuator-icon">{icon}</span>
-        <span className={`pro-status ${active ? "is-on" : "is-off"}`}>
+        <span className="pro-status is-off">
           <i />
-          {active ? "Aktif" : "Tidak Aktif"}
+          Belum terhubung
         </span>
       </div>
 
       <h3>{label}</h3>
 
-      <div className={`pro-switch-state ${active ? "is-on" : ""}`}>
-        {active ? "ON" : "OFF"}
-      </div>
+      <div className="pro-switch-state">--</div>
     </article>
+  );
+}
+
+function OnlineBadge({ online, label }) {
+  return (
+    <span className={`pro-status ${online ? "is-on" : "is-off"}`}>
+      <i />
+      {label || (online ? "Online" : "Offline")}
+    </span>
   );
 }
 
@@ -120,45 +191,148 @@ function DashboardTabs({ activeTab, onChange }) {
   );
 }
 
-export default function DashboardPage({
-  setPage,
-  dashboardData = {},
-  onDownloadData,
-}) {
-  const [activeTab, setActiveTab] = useState("actuator");
-  const [period, setPeriod] = useState("1D");
-
-  const data = useMemo(
-    () => ({
-      ...defaultData,
-      ...dashboardData,
-      greenhouse: {
-        ...defaultData.greenhouse,
-        ...(dashboardData.greenhouse || {}),
-      },
-      actuators: {
-        ...defaultData.actuators,
-        ...(dashboardData.actuators || {}),
-      },
-      nutrient: {
-        ...defaultData.nutrient,
-        ...(dashboardData.nutrient || {}),
-      },
-      microclimate: {
-        ...defaultData.microclimate,
-        ...(dashboardData.microclimate || {}),
-      },
-      plantNeeds: {
-        ...defaultData.plantNeeds,
-        ...(dashboardData.plantNeeds || {}),
-      },
-      charts: {
-        ...defaultData.charts,
-        ...(dashboardData.charts || {}),
-      },
-    }),
-    [dashboardData]
+function PeriodButtons({ period, onChange }) {
+  return (
+    <div className="pro-periods">
+      {PERIODS.map(([value, label]) => (
+        <button
+          type="button"
+          key={value}
+          className={period === value ? "active" : ""}
+          onClick={() => onChange(value)}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
   );
+}
+
+// Grafik garis untuk satu besaran; series = [{ label, column }]
+function ChartPanel({ title, metrics, seriesFor, chart, period }) {
+  const [metricKey, setMetricKey] = useState(metrics[0].key);
+  const metric = metrics.find((m) => m.key === metricKey) || metrics[0];
+  const rows = chart.data?.result || [];
+  const series = seriesFor(metric.key);
+
+  const chartData = {
+      labels: rows.map((r) => formatTime(r.timestamp, period !== "1D")),
+      datasets: series.map((s, i) => ({
+        label: s.label,
+        data: rows.map((r) => r[s.column]),
+        borderColor: COLORS[i % COLORS.length],
+        backgroundColor: COLORS[i % COLORS.length],
+        borderWidth: 2,
+        pointRadius: 0,
+        tension: 0.25,
+        spanGaps: false,
+      })),
+  };
+
+  const hasData = series.some((s) => rows.some((r) => r[s.column] !== null));
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: false,
+    interaction: { mode: "index", intersect: false },
+    plugins: {
+      legend: { display: series.length > 1, position: "bottom" },
+      tooltip: {
+        callbacks: {
+          label: (ctx) =>
+            `${ctx.dataset.label}: ${formatNumber(ctx.parsed.y)} ${metric.unit}`,
+        },
+      },
+    },
+    scales: {
+      x: { ticks: { maxTicksLimit: 8, maxRotation: 0 }, grid: { display: false } },
+      y: { title: { display: !!metric.unit, text: metric.unit } },
+    },
+  };
+
+  return (
+    <div className="pro-chart">
+      <div className="pro-chart-head">
+        <h2>{title}</h2>
+        <span>
+          Periode {period} · rata-rata per {Math.round((chart.data?.bucket_seconds || 0) / 60)} menit
+        </span>
+      </div>
+
+      <div className="pro-metric-pills">
+        {metrics.map((m) => (
+          <button
+            type="button"
+            key={m.key}
+            className={m.key === metric.key ? "active" : ""}
+            onClick={() => setMetricKey(m.key)}
+          >
+            {m.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="pro-chart-body">
+        {hasData ? (
+          <div className="pro-chart-canvas">
+            <Line data={chartData} options={options} />
+          </div>
+        ) : (
+          <div className="pro-empty-chart">
+            <strong>{chart.loading ? "Memuat grafik..." : "Belum ada data"}</strong>
+            {chart.error
+              ? `Gagal mengambil data grafik (${chart.error}).`
+              : `Belum ada data ${metric.label} pada periode ini.`}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default function DashboardPage({ setPage }) {
+  const [activeTab, setActiveTab] = useState("nutrient");
+  const [period, setPeriod] = useState("1D");
+  const [downloadPeriod, setDownloadPeriod] = useState("1D");
+
+  const live = usePolling(`${API_BASE}/gisting/latest`, LIVE_INTERVAL_MS);
+  const chart = usePolling(`${API_BASE}/gisting/chart?period=${period}`, CHART_INTERVAL_MS);
+
+  const d = live.data?.data || {};
+  const online = !!live.data?.online && !live.error;
+  const statusText = live.error
+    ? "Server tidak terjangkau"
+    : live.loading && !live.data
+      ? "Menghubungkan..."
+      : online
+        ? "Online"
+        : live.data?.data
+          ? "Offline"
+          : "Belum ada data";
+  const updatedText = d.timestamp
+    ? `Terakhir update ${formatTime(d.timestamp)} WIB (${formatAge(live.data?.age_seconds)})`
+    : "Menunggu data sensor";
+
+  const toren = (n) => ({
+    online: online && !!d[`toren${n}_online`],
+    tds: d[`toren${n}_tds`],
+    ph: d[`toren${n}_ph`],
+    water_temperature: d[`toren${n}_water_temperature`],
+    distance: d[`toren${n}_distance`],
+  });
+
+  const nutrientSeries = (key) => [
+    { label: "Toren 1", column: `toren1_${key}` },
+    { label: "Toren 2", column: `toren2_${key}` },
+  ];
+  const microSeries = (key) => [{ label: MICRO_METRICS.find((m) => m.key === key)?.label, column: key }];
+  const plantSeries = () => [
+    { label: "Waterflow 1", column: "waterflow_1" },
+    { label: "Waterflow 2", column: "waterflow_2" },
+  ];
+
+  const downloadUrl = `${API_BASE}/gisting/download?period=${downloadPeriod}`;
 
   const goHome = () => setPage("home");
   const goMarketplace = () => setPage("shop");
@@ -812,6 +986,121 @@ export default function DashboardPage({
             gap: 25px;
           }
         }
+
+        /* Live data */
+        .pro-online.is-offline {
+          color: #8a5a12;
+        }
+
+        .pro-online.is-offline i {
+          background: #d0942b;
+        }
+
+        .pro-section-head {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          margin: 0 0 12px;
+        }
+
+        .pro-section-head h2 {
+          margin: 0;
+          color: #35503c;
+          font-size: 18px;
+          font-weight: 800;
+        }
+
+        .pro-section + .pro-section {
+          margin-top: 26px;
+        }
+
+        .pro-grid-4 {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 18px;
+        }
+
+        .pro-metric-pills {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+          margin-top: 14px;
+        }
+
+        .pro-metric-pills button {
+          height: 30px;
+          padding: 0 12px;
+          border: 1px solid #d7e1d8;
+          border-radius: 999px;
+          background: #ffffff;
+          color: #516057;
+          font-size: 12px;
+          font-weight: 700;
+          cursor: pointer;
+        }
+
+        .pro-metric-pills button.active {
+          background: #e6f4e9;
+          border-color: #9cc9a7;
+          color: #176137;
+        }
+
+        .pro-chart-body {
+          height: 300px;
+        }
+
+        .pro-chart-canvas {
+          position: relative;
+          width: 100%;
+          height: 100%;
+        }
+
+        .pro-note {
+          margin: 0 0 18px;
+          padding: 12px 14px;
+          border: 1px solid #ece3c8;
+          border-radius: 10px;
+          background: #fbf8ee;
+          color: #6f6440;
+          font-size: 13px;
+        }
+
+        .pro-download-actions {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 10px;
+        }
+
+        .pro-download-actions .pro-periods {
+          margin: 0;
+        }
+
+        a.pro-download-btn {
+          display: inline-flex;
+          align-items: center;
+          text-decoration: none;
+        }
+
+        @media (max-width: 1050px) {
+          .pro-grid-4 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+        }
+
+        @media (max-width: 720px) {
+          .pro-grid-4 {
+            grid-template-columns: 1fr 1fr;
+          }
+          .pro-download {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+          .pro-download-actions {
+            align-items: flex-start;
+          }
+        }
       `}</style>
 
       {/* HEADER */}
@@ -871,16 +1160,16 @@ export default function DashboardPage({
 
             <div className="pro-greenhouse-info">
               <div className="pro-greenhouse-name">
-                {data.greenhouse.name} · {data.greenhouse.code}
+                Greenhouse Utama Gisting · GH-01
               </div>
 
-              <div className="pro-online">
+              <div className={`pro-online ${online ? "" : "is-offline"}`}>
                 <i />
-                {data.greenhouse.status}
+                {statusText}
               </div>
 
               <div className="pro-updated">
-                {data.greenhouse.lastUpdated}
+                {updatedText}
               </div>
             </div>
           </div>
@@ -897,170 +1186,91 @@ export default function DashboardPage({
 
           <section className="pro-content">
             {activeTab === "actuator" && (
-              <div className="pro-grid-3">
-                <ActuatorCard
-                  label="Pompa Air"
-                  active={data.actuators.waterPump}
-                  icon="💧"
-                />
-                <ActuatorCard
-                  label="Lampu UV"
-                  active={data.actuators.uvLamp}
-                  icon="◉"
-                />
-                <ActuatorCard
-                  label="Pompa Nutrisi"
-                  active={data.actuators.nutrientPump}
-                  icon="🧪"
-                />
-              </div>
-            )}
-
-            {activeTab === "nutrient" && (
               <>
+                <p className="pro-note">
+                  Status aktuator belum dikirim oleh perangkat di greenhouse, jadi
+                  kartu di bawah belum menampilkan kondisi sebenarnya.
+                </p>
                 <div className="pro-grid-3">
-                  <MetricCard
-                    label="TDS"
-                    value={data.nutrient.tds}
-                    unit="mg/L"
-                  />
-                  <MetricCard
-                    label="Water Temperature"
-                    value={data.nutrient.waterTemperature}
-                    unit="°C"
-                  />
-                  <MetricCard
-                    label="pH"
-                    value={data.nutrient.ph}
-                  />
-                </div>
-
-                <div className="pro-periods">
-                  {[
-                    ["1D", "1 Day"],
-                    ["7D", "7 Day"],
-                    ["30D", "30 Day"],
-                  ].map(([value, label]) => (
-                    <button
-                      type="button"
-                      key={value}
-                      className={period === value ? "active" : ""}
-                      onClick={() => setPeriod(value)}
-                    >
-                      {label}
-                    </button>
-                  ))}
-                </div>
-
-                <div className="pro-chart">
-                  <div className="pro-chart-head">
-                    <h2>Nutrient Chart</h2>
-                    <span>Periode {period}</span>
-                  </div>
-
-                  <div className="pro-chart-body">
-                    {data.charts.tds?.length ? (
-                      <div className="pro-bars">
-                        {data.charts.tds.map((value, index) => (
-                          <div
-                            className="pro-bar"
-                            key={index}
-                            style={{
-                              height: `${Math.max(
-                                5,
-                                Math.min(100, Number(value) || 5)
-                              )}%`,
-                            }}
-                            title={String(value)}
-                          />
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="pro-empty-chart">
-                        <strong>Belum ada data sensor</strong>
-                        Grafik akan terisi otomatis setelah endpoint
-                        backend mengirimkan data TDS.
-                      </div>
-                    )}
-                  </div>
+                  <ActuatorCard label="Pompa Air" icon="💧" />
+                  <ActuatorCard label="Lampu UV" icon="◉" />
+                  <ActuatorCard label="Pompa Nutrisi" icon="🧪" />
                 </div>
               </>
             )}
 
+            {activeTab === "nutrient" && (
+              <>
+                {[1, 2].map((n) => {
+                  const t = toren(n);
+                  return (
+                    <div className="pro-section" key={n}>
+                      <div className="pro-section-head">
+                        <h2>Toren {n}</h2>
+                        <OnlineBadge online={t.online} />
+                      </div>
+                      <div className="pro-grid-4">
+                        <MetricCard label="TDS" value={t.tds} unit="ppm" />
+                        <MetricCard label="pH" value={t.ph} />
+                        <MetricCard label="Suhu Air" value={t.water_temperature} unit="°C" />
+                        <MetricCard label="Jarak Muka Air" value={t.distance} unit="cm" />
+                      </div>
+                    </div>
+                  );
+                })}
+
+                <PeriodButtons period={period} onChange={setPeriod} />
+                <ChartPanel
+                  title="Nutrient Chart"
+                  metrics={NUTRIENT_METRICS}
+                  seriesFor={nutrientSeries}
+                  chart={chart}
+                  period={period}
+                />
+              </>
+            )}
+
             {activeTab === "microclimate" && (
-              <div className="pro-grid-3">
-                <MetricCard
-                  label="Wind Direction"
-                  value={data.microclimate.windDirection}
+              <>
+                <div className="pro-grid-3">
+                  <MetricCard label="Suhu Udara" value={d.air_temperature} unit="°C" />
+                  <MetricCard label="Kelembapan" value={d.humidity} unit="%RH" />
+                  <MetricCard label="Tekanan Udara" value={d.pressure} unit="hPa" />
+                  <MetricCard label="CO₂" value={d.co2} unit="ppm" />
+                  <MetricCard label="Kecepatan Angin" value={d.wind_speed} unit="m/s" />
+                  <MetricCard label="Radiasi Matahari" value={d.solar_radiation} unit="W/m²" />
+                  <MetricCard label="Curah Hujan (total)" value={d.rainfall_total} unit="mm" />
+                  <MetricCard label="SVP" value={d.svp} unit="kPa" />
+                  <MetricCard label="AVP" value={d.avp} unit="kPa" />
+                  <MetricCard label="VPD" value={d.vpd} unit="kPa" />
+                </div>
+
+                <PeriodButtons period={period} onChange={setPeriod} />
+                <ChartPanel
+                  title="Microclimate Chart"
+                  metrics={MICRO_METRICS}
+                  seriesFor={microSeries}
+                  chart={chart}
+                  period={period}
                 />
-                <MetricCard
-                  label="Wind Speed"
-                  value={data.microclimate.windSpeed}
-                  unit="m/s"
-                />
-                <MetricCard
-                  label="Barometric Pressure"
-                  value={data.microclimate.pressure}
-                  unit="hPa"
-                />
-                <MetricCard
-                  label="Room Temperature"
-                  value={data.microclimate.roomTemperature}
-                  unit="°C"
-                />
-                <MetricCard
-                  label="Temperature DHT"
-                  value={data.microclimate.dhtTemperature}
-                  unit="°C"
-                />
-                <MetricCard
-                  label="Humidity"
-                  value={data.microclimate.humidity}
-                  unit="%RH"
-                />
-                <MetricCard
-                  label="SVP"
-                  value={data.microclimate.svp}
-                  unit="kPa"
-                />
-                <MetricCard
-                  label="AVP"
-                  value={data.microclimate.avp}
-                  unit="kPa"
-                />
-                <MetricCard
-                  label="VPD"
-                  value={data.microclimate.vpd}
-                  unit="kPa"
-                />
-              </div>
+              </>
             )}
 
             {activeTab === "plant" && (
               <>
-                {[1, 2, 3].map((table) => (
-                  <div className="pro-plant-table" key={table}>
-                    <h2>Table {table}</h2>
+                <div className="pro-grid-3">
+                  <MetricCard label="Waterflow 1" value={d.waterflow_1} unit="pulse/s" />
+                  <MetricCard label="Waterflow 2" value={d.waterflow_2} unit="pulse/s" />
+                </div>
 
-                    <div className="pro-grid-3">
-                      <MetricCard
-                        label="Water Flow"
-                        value={data.plantNeeds.waterFlow}
-                        unit="L/H"
-                      />
-                      <MetricCard
-                        label="Soil Moisture"
-                        value={data.plantNeeds.soilMoisture}
-                        unit="%"
-                      />
-                      <MetricCard
-                        label="Weight"
-                        value={data.plantNeeds.weight}
-                        unit="kg"
-                      />
-                    </div>
-                  </div>
-                ))}
+                <PeriodButtons period={period} onChange={setPeriod} />
+                <ChartPanel
+                  title="Waterflow Chart"
+                  metrics={PLANT_METRICS}
+                  seriesFor={plantSeries}
+                  chart={chart}
+                  period={period}
+                />
               </>
             )}
 
@@ -1070,25 +1280,34 @@ export default function DashboardPage({
                   <div className="pro-eyebrow">Data Center</div>
                   <h2>Download Data Sensor</h2>
                   <p>
-                    Export data sensor greenhouse untuk analisis, dokumentasi,
-                    dan pelaporan. Fungsi ini siap dihubungkan ke endpoint
-                    backend saat API sudah tersedia.
+                    Export data sensor greenhouse dalam format CSV (jam WIB).
+                    Data dirata-rata per 1 menit untuk 1 hari, per 10 menit
+                    untuk 7 hari, dan per 1 jam untuk 30 hari.
                   </p>
                 </div>
 
-                <button
-                  type="button"
-                  className="pro-download-btn"
-                  onClick={onDownloadData}
-                >
-                  ↓ Download Data
-                </button>
+                <div className="pro-download-actions">
+                  <div className="pro-periods">
+                    {PERIODS.map(([value, label]) => (
+                      <button
+                        type="button"
+                        key={value}
+                        className={downloadPeriod === value ? "active" : ""}
+                        onClick={() => setDownloadPeriod(value)}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                  <a className="pro-download-btn" href={downloadUrl} download>
+                    ↓ Download CSV {downloadPeriod}
+                  </a>
+                </div>
               </div>
             )}
           </section>
         </div>
       </main>
-
       {/* FOOTER */}
       <motion.footer
         initial={{ opacity: 0 }}
