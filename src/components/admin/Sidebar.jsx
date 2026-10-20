@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
  
 // Menu Super Admin (SRS 4.1). id dipakai untuk menandai menu aktif.
-const MENU_ITEMS = [
+export const MENU_ITEMS = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
   { id: "admins", label: "Manajemen Admin", icon: Users },
   { id: "permissions", label: "Manajemen Hak Akses", icon: KeyRound },
@@ -88,7 +88,7 @@ export default function Sidebar({ activeMenu = "dashboard", onSelect, user, onLo
         <button
           type="button"
           onClick={onLogout}
-          className="btn btn-ghost btn-sm btn-square text-slate-400 hover:text-white"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-slate-400 hover:bg-slate-700 hover:text-white"
           aria-label="Logout"
         >
           <LogOut size={16} />

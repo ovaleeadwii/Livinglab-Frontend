@@ -1,9 +1,13 @@
 import React, { useState } from "react";
-import Sidebar from "../components/admin/Sidebar";
-
+import Sidebar, { MENU_ITEMS } from "../components/admin/Sidebar";
+import Header from "../components/admin/Header";
+ 
+// Halaman Home Super Admin (AgriCore).
+// Sudah: Sidebar, Header. Menyusul: WelcomeBanner, StatCards, AuditLogTable.
 export default function AdminDashboardPage({ setPage, user, onLogout }) {
   const [activeMenu, setActiveMenu] = useState("dashboard");
-
+  const activeLabel = MENU_ITEMS.find((m) => m.id === activeMenu)?.label || "Dashboard";
+ 
   return (
     <div className="flex min-h-screen bg-slate-50">
       <Sidebar
@@ -12,10 +16,15 @@ export default function AdminDashboardPage({ setPage, user, onLogout }) {
         user={user}
         onLogout={onLogout}
       />
-
-      <main className="flex-1 p-6">
-        <p className="text-sm text-slate-500">Menu aktif: {activeMenu}</p>
-      </main>
+ 
+      <div className="flex min-w-0 flex-1 flex-col">
+        <Header pageTitle={activeLabel} user={user} />
+ 
+        <main className="flex-1 p-6">
+          {/* Sementara: penanda isi halaman */}
+          <p className="text-sm text-slate-500">Menu aktif: {activeLabel}</p>
+        </main>
+      </div>
     </div>
   );
 }
