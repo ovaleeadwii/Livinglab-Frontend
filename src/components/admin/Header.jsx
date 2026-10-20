@@ -1,60 +1,49 @@
 import React from "react";
-import { Search, Radio, Bell } from "lucide-react";
- 
-// Topbar halaman Super Admin: breadcrumb, pencarian, status telemetri, notifikasi, profil.
-export default function Header({ pageTitle = "Dashboard", user, telemetryText = "24.8°C | pH 6.1", hasNotification = true }) {
-  const name = user?.name || "Ovalia Dwi Rahmadani";
-  const role = user?.role || "Super Admin R1";
- 
+import { Search, Bell, ChevronDown } from "lucide-react";
+
+export default function Header({ pageTitle = "Dashboard", user }) {
   return (
-    <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b border-slate-200 bg-white px-6">
-      {/* Breadcrumb */}
-      <div className="shrink-0 font-mono text-xs text-slate-500">
-        AgriCore <span className="mx-1">›</span>
-        <span className="font-semibold text-slate-800">{pageTitle}</span>
+    <header className="flex h-16 w-full items-center justify-between border-b border-slate-200 bg-white px-6">
+      {/* Judul Halaman */}
+      <div>
+        <h1 className="text-xl font-bold text-slate-800">{pageTitle}</h1>
       </div>
- 
-      {/* Pencarian */}
-      <label className="hidden max-w-xs flex-1 items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 md:flex">
-        <Search size={14} className="shrink-0 text-slate-400" />
-        <input
-          type="text"
-          placeholder="Search telemetry nodes..."
-          className="w-full bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400"
-        />
-      </label>
- 
-      <div className="ml-auto flex items-center gap-4">
-        {/* Status telemetri */}
-        <div className="hidden items-center gap-2 rounded-lg border border-slate-200 px-3 py-1.5 font-mono text-xs text-slate-600 lg:flex">
-          <Radio size={14} className="text-[#176137]" />
-          Gisting Telemetry: <span className="font-semibold text-slate-800">{telemetryText}</span>
+
+      {/* Bagian Kanan: Pencarian, Notifikasi, & Profil */}
+      <div className="flex items-center gap-4">
+        {/* Input Search */}
+        <div className="relative w-64">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <input
+            type="text"
+            placeholder="Cari sesuatu..."
+            className="w-full rounded-lg border border-slate-200 bg-slate-50 py-1.5 pl-9 pr-4 text-sm text-slate-700 outline-none transition-all focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500"
+          />
         </div>
- 
-        {/* Notifikasi */}
-        <button
-          type="button"
-          className="relative flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100"
-          aria-label="Notifikasi"
-        >
-          <Bell size={18} />
-          {hasNotification && (
-            <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-red-500" />
-          )}
+
+        {/* Tombol Notifikasi */}
+        <button className="relative rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-700">
+          <Bell className="h-5 w-5" />
+          <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-emerald-500 ring-2 ring-white"></span>
         </button>
- 
-        {/* Profil */}
-        <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#176137] text-xs font-bold text-white">
-            {name.charAt(0)}
+
+        {/* Pembatas / Divider */}
+        <div className="h-6 w-px bg-slate-200"></div>
+
+        {/* Profil Admin */}
+        <div className="flex items-center gap-3 cursor-pointer">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-600 font-semibold text-white">
+            {user?.name ? user.name.charAt(0).toUpperCase() : "A"}
           </div>
-          <div className="hidden leading-tight sm:block">
-            <div className="text-sm font-semibold text-slate-800">{name}</div>
-            <div className="font-mono text-[10px] text-[#176137]">{role}</div>
+          <div className="hidden text-left md:block">
+            <p className="text-sm font-medium text-slate-800 leading-tight">
+              {user?.name || "Super Admin"}
+            </p>
+            <p className="text-xs text-slate-500">AgriCore Systems</p>
           </div>
+          <ChevronDown className="h-4 w-4 text-slate-400" />
         </div>
       </div>
     </header>
   );
 }
- 
