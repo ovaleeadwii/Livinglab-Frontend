@@ -1,28 +1,32 @@
 import React, { useState } from "react";
-import Sidebar, { MENU_ITEMS } from "../components/admin/Sidebar";
+import Sidebar from "../components/admin/Sidebar";
 import Header from "../components/admin/Header";
- 
-// Halaman Home Super Admin (AgriCore).
-// Sudah: Sidebar, Header. Menyusul: WelcomeBanner, StatCards, AuditLogTable.
+
 export default function AdminDashboardPage({ setPage, user, onLogout }) {
   const [activeMenu, setActiveMenu] = useState("dashboard");
-  const activeLabel = MENU_ITEMS.find((m) => m.id === activeMenu)?.label || "Dashboard";
- 
+
   return (
     <div className="flex min-h-screen bg-slate-50">
+      {/* Sidebar Navigasi */}
       <Sidebar
         activeMenu={activeMenu}
         onSelect={setActiveMenu}
         user={user}
         onLogout={onLogout}
       />
- 
-      <div className="flex min-w-0 flex-1 flex-col">
-        <Header pageTitle={activeLabel} user={user} />
- 
+
+      {/* Area Konten Utama */}
+      <div className="flex flex-1 flex-col overflow-x-hidden">
+        {/* Header Atas */}
+        <Header pageTitle="Dashboard Utama" user={user} />
+
+        {/* Isi Halaman */}
         <main className="flex-1 p-6">
-          {/* Sementara: penanda isi halaman */}
-          <p className="text-sm text-slate-500">Menu aktif: {activeLabel}</p>
+          <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+            <p className="text-sm text-slate-600">
+              Menu aktif saat ini: <span className="font-semibold text-emerald-600">{activeMenu}</span>
+            </p>
+          </div>
         </main>
       </div>
     </div>
