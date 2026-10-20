@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Sidebar, { MENU_ITEMS } from "../components/admin/Sidebar";
 import Header from "../components/admin/Header";
 import WelcomeBanner from "../components/admin/WelcomeBanner";
+import ChatbotPanel from "../components/ChatbotPanel";
 // IMPORT-BERIKUTNYA
 
 import {
@@ -37,7 +38,7 @@ export default function AdminDashboardPage({ setPage, user, onLogout }) {
             </div>
           )}
 
-          {/* LANGKAH 7: Chat Bot */}
+         {activeMenu === "chatbot" && <ChatbotPanel />}
 
           {activeMenu !== "dashboard" && activeMenu !== "chatbot" && (
             <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center">

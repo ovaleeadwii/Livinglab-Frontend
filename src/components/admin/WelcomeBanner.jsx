@@ -1,40 +1,51 @@
 import React from "react";
-import { Sparkles, ArrowRight } from "lucide-react";
+import { Percent, Download } from "lucide-react";
 
-export default function WelcomeBanner({ user, onOpenCommission }) {
+// Banner sambutan di atas dashboard Super Admin.
+export default function WelcomeBanner({ user, onOpenCommission, onExport }) {
+  const name = user?.name || "Ovalia Dwi Rahmadani";
+
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-800 via-emerald-700 to-teal-800 p-6 text-white shadow-lg md:p-8">
-      <div className="relative z-10 max-w-2xl">
-        <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-emerald-500/20 px-3 py-1 text-xs font-medium text-emerald-200 backdrop-blur-sm">
-          <Sparkles className="h-3.5 w-3.5 text-emerald-300" />
-          <span>Sistem Agropolitan Smart Living Lab</span>
+    <section className="rounded-2xl border border-green-100 bg-gradient-to-r from-white via-white to-green-50 p-6">
+      <div className="flex flex-wrap items-start justify-between gap-6">
+        <div className="max-w-2xl">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="rounded-full bg-green-100 px-3 py-1 font-mono text-[10px] font-bold text-[#176137]">
+              ● ROOT ACCESS R1 • SUPER ADMIN
+            </span>
+            <span className="font-mono text-[10px] text-slate-400">
+              CLUSTER: GST-PROD-01 • KAB. TANGGAMUS
+            </span>
+          </div>
+
+          <h1 className="mt-3 text-3xl font-extrabold leading-tight text-slate-900 md:text-4xl">
+            Selamat Datang, {name}
+          </h1>
+          <p className="mt-2 text-sm text-slate-500">
+            Ringkasan performa finansial platform, tata kelola marketplace multi-role, dan telemetri
+            greenhouse Gisting dalam satu konsol kendali operasional terpadu.
+          </p>
         </div>
-        <h2 className="text-2xl font-bold tracking-tight text-white md:text-3xl">
-          Selamat Datang, {user?.name || "Super Admin"}! 👋
-        </h2>
-        <p className="mt-2 text-sm text-emerald-100/90 leading-relaxed md:text-base">
-          Pantau seluruh aktivitas transaksi komoditas, jaringan mitra reseller, telemetry IoT, dan komisi platform AgriCore secara real-time dari panel ini.
-        </p>
-        <div className="mt-6 flex flex-wrap items-center gap-3">
+
+        <div className="flex flex-col gap-2">
           <button
+            type="button"
             onClick={onOpenCommission}
-            className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-300"
+            className="flex items-center gap-2 rounded-lg bg-[#176137] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#12542e]"
           >
-            <span>Kelola Komisi Pending</span>
-            <ArrowRight className="h-4 w-4" />
+            <Percent size={16} />
+            Konfigurasi Komisi
           </button>
           <button
-            onClick={() => window.open("#", "_blank")}
-            className="inline-flex items-center gap-2 rounded-xl bg-white/10 px-4 py-2.5 text-sm font-semibold text-white backdrop-blur-md transition-all hover:bg-white/20"
+            type="button"
+            onClick={onExport}
+            className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
           >
-            <span>Lihat Laporan Analytics</span>
+            <Download size={16} />
+            Ekspor Laporan (CSV/PDF)
           </button>
         </div>
       </div>
-
-      {/* Dekorasi Aksen Latar Belakang */}
-      <div className="absolute -right-10 -bottom-10 h-64 w-64 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none" />
-      <div className="absolute right-20 top-0 h-40 w-40 rounded-full bg-teal-400/10 blur-2xl pointer-events-none" />
-    </div>
+    </section>
   );
 }
