@@ -12,7 +12,7 @@ import {
   ClipboardCheck,
   Cpu,
 } from "lucide-react";
-import { DIVISIONS } from "../../data/adminManagementData";
+import { DIVISIONS } from "../data/adminManagementData";
 
 const DIVISION_ICON = {
   iot: Sprout,

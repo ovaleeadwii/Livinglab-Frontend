@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Search, Send, MessageSquare, Bot } from "lucide-react";
-import { getConversations, getMessages, sendReply } from "../services/chatbotService";
+import { getConversations, getMessages, sendReply } from "../../../services/chatbotService";
 
 // Inbox Chat CS: admin melihat daftar chat dari pembeli dan membalasnya.
 // Pengambilan & pengiriman data ada di services/chatbotService.js (dikerjakan tim chat).
