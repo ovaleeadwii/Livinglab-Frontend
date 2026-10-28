@@ -9,7 +9,6 @@ export default {
   ],
   theme: {
     extend: {
-
       fontFamily: {
         poppins: ['Poppins', 'sans-serif'],
       },
@@ -17,6 +16,7 @@ export default {
   },
   daisyui: {
     themes: ['light'],
+    prefix: 'd-',
   },
   plugins: [
     daisyui
