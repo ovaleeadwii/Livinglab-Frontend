@@ -327,6 +327,56 @@ margin-right: auto;
         
 }
         
+.hdr-menu-btn {
+  position: relative;
+  height: 46px;
+  padding: 0 16px 0 13px;
+  border: none;
+  border-radius: 12px;
+  background: #165c35;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(22, 92, 53, 0.22);
+  transition: .2s ease;
+  flex-shrink: 0;
+}
+.hdr-menu-btn:hover { background: #124d2b; transform: translateY(-1px); }
+.hdr-menu-badge {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  min-width: 21px;
+  height: 21px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #e08a00;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+}
+.shop-menu-btn.hdr-akun { background: #f4faf5; border-color: #d7e8da; }
+.shop-menu-btn.hdr-akun span:first-child { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; font-size: 18px; }
+.shop-menu-btn.hdr-akun img { width: 100%; height: 100%; object-fit: cover; }
+.shop-menu-btn.hdr-akun span:last-child { display: flex; flex-direction: column; min-width: 0; }
+.shop-menu-btn.hdr-akun strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.shop-menu-btn.hdr-akun small { color: #6d7b72; font-size: 12px; font-weight: 500; }
+@media (max-width: 900px) {
+  .topbar .search { flex-basis: 100%; }
+  .topbar .actions { margin-left: auto; }
+}
+@media (max-width: 640px) {
+  .hdr-menu-btn span { display: none; }
+  .hdr-menu-btn { width: 46px; padding: 0; justify-content: center; }
+}
 .shop-menu-btn {
           
 width: 100%;
@@ -1218,236 +1268,18 @@ style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity:
 </form>
         
 <div className="actions">
-          
-<div
-            
-className="action-item"
-            
-onClick={() => {
-              
-if (user) {
-                
-setPage("profile");
-              
-} else {
-                
-setPage("auth");
-              
-}
-            
-}}
-            
-style={{ cursor: "pointer" }}
-          
->
-            
-<div
-              
-className="icon"
-              
-style={
-                
-user
-                  
-? {
-                      
-overflow: "hidden",
-                      
-borderRadius: "50%",
-                      
-width: "38px",
-                      
-height: "38px",
-                    
-}
-                  
-: {}
-              
-}
-            
->
-              
-{user && user.avatar ? (
-                
-<img
-                  
-src={user.avatar}
-                  
-alt="Profile"
-                  
-style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                
-/>
-              
-) : (
-                
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  
-<circle cx="12" cy="8" r="4"/>
-                  
-<path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>
-                
-</svg>
-              
-)}
-            
-</div>
-            
-<div className="label">
-              
-<small>{user ? user.role || "Member" : "Sign in / Register"}</small>
-              
-<strong>{user ? user.name : "My Account"}</strong>
-            
-</div>
-          
-</div>
-          
-<button
-            
-type="button"
-            
-onClick={bukaKeranjang}
-            
-aria-label="Buka keranjang"
-            
-style={{
-              
-border: "none",
-              
-background: "transparent",
-              
-padding: 0,
-              
-margin: 0,
-              
-cursor: "pointer",
-              
-display: "flex",
-              
-alignItems: "center",
-            
-}}
-          
->
-            
-<div className="action-item" style={{ position: "relative" }}>
-              
-<div className="icon">
-                
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  
-<circle cx="9" cy="21" r="1"/>
-                  
-<circle cx="20" cy="21" r="1"/>
-                  
-<path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/>
-                
-</svg>
-              
-</div>
-              
-<div className="label">
-                
-<small>My cart</small>
-                
-<strong>{formatRupiah(cartTotal)}</strong>
-              
-</div>
-              
-{cartCount > 0 && (
-                
-<span
-                  
-style={{
-                    
-position: "absolute",
-                    
-top: -7,
-                    
-left: 28,
-                    
-minWidth: 21,
-                    
-height: 21,
-                    
-padding: "0 5px",
-                    
-borderRadius: 999,
-                    
-background: "#1f7a45",
-                    
-color: "#fff",
-                    
-fontSize: 11,
-                    
-fontWeight: 800,
-                    
-display: "flex",
-                    
-alignItems: "center",
-                    
-justifyContent: "center",
-                    
-border: "2px solid #fff",
-                  
-}}
-                
->
-                  
-{cartCount}
-                
-</span>
-              
-)}
-            
-</div>
-          
-</button>
-          
-<button
-            
-type="button"
-            
-onClick={() => setMenuAkun(true)}
-            
-aria-label="Buka menu"
-            
-style={{
-              
-width: 44,
-              
-height: 44,
-              
-border: "none",
-              
-borderRadius: 12,
-              
-background: "#eef7f0",
-              
-color: "#165c35",
-              
-display: "flex",
-              
-alignItems: "center",
-              
-justifyContent: "center",
-              
-cursor: "pointer",
-              
-marginLeft: 2,
-            
-}}
-          
->
-            
-<svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              
-<path d="M4 6h16M4 12h16M4 18h16"/>
-            
-</svg>
-          
-</button>
+          <button
+            type="button"
+            className="hdr-menu-btn"
+            onClick={() => setMenuAkun(true)}
+            aria-label="Buka menu"
+          >
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <path d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+            <span>Menu</span>
+            {cartCount > 0 && <b className="hdr-menu-badge">{cartCount}</b>}
+          </button>
         
 </div>
       
@@ -2110,6 +1942,14 @@ color: "#526158",
 </div>
             
 <div style={{ display: "grid", gap: 10 }}>
+            <button className="shop-menu-btn hdr-akun" onClick={() => setPage("profile")}>
+              <span>{user && user.avatar ? <img src={user.avatar} alt="" /> : "👤"}</span>
+              <span>
+                <strong>{user ? user.name : "Akun Saya"}</strong>
+                <small>Lihat profil saya</small>
+              </span>
+            </button>
+
               
 <button className="shop-menu-btn" onClick={() => setPage("home")}>
                 

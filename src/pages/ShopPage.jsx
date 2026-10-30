@@ -1024,9 +1024,7 @@ margin: 0;
         
 .shop-page-responsive .all-products-section,
         
-.shop-page-responsive .service-features-banner,
-        
-.shop-page-responsive .footer {
+.shop-page-responsive .service-features-banner {
           
 width: 100%;
           
@@ -1836,6 +1834,56 @@ font-size: 14px;
         
 }
         
+.hdr-menu-btn {
+  position: relative;
+  height: 46px;
+  padding: 0 16px 0 13px;
+  border: none;
+  border-radius: 12px;
+  background: #165c35;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(22, 92, 53, 0.22);
+  transition: .2s ease;
+  flex-shrink: 0;
+}
+.hdr-menu-btn:hover { background: #124d2b; transform: translateY(-1px); }
+.hdr-menu-badge {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  min-width: 21px;
+  height: 21px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #e08a00;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+}
+.shop-menu-btn.hdr-akun { background: #f4faf5; border-color: #d7e8da; }
+.shop-menu-btn.hdr-akun span:first-child { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; font-size: 18px; }
+.shop-menu-btn.hdr-akun img { width: 100%; height: 100%; object-fit: cover; }
+.shop-menu-btn.hdr-akun span:last-child { display: flex; flex-direction: column; min-width: 0; }
+.shop-menu-btn.hdr-akun strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.shop-menu-btn.hdr-akun small { color: #6d7b72; font-size: 12px; font-weight: 500; }
+@media (max-width: 900px) {
+  .topbar .search { flex-basis: 100%; }
+  .topbar .actions { margin-left: auto; }
+}
+@media (max-width: 640px) {
+  .hdr-menu-btn span { display: none; }
+  .hdr-menu-btn { width: 46px; padding: 0; justify-content: center; }
+}
 .shop-menu-btn {
           
 width: 100%;
@@ -1922,6 +1970,263 @@ cursor: pointer;
         
 }
       
+/* ===== Footer: disamakan dengan footer Dashboard ===== */
+.shop-page-responsive .footer {
+  width: 100%;
+  max-width: none;
+  margin: 30px 0 0;
+  padding: 0;
+  background: #173524;
+  color: #ffffff;
+  border-top: 1px solid #244c32;
+}
+.shop-page-responsive .footer-grid {
+  width: min(1420px, calc(100% - 56px));
+  max-width: none;
+  margin: 0 auto;
+  padding: 42px 0 24px;
+  display: grid;
+  grid-template-columns: 1.8fr 1fr 1fr 1.15fr;
+  gap: 44px;
+}
+.shop-page-responsive .footer-brand {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.shop-page-responsive .footer-brand-icon {
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  background: #ffffff;
+  border-radius: 50%;
+  padding: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.shop-page-responsive .footer-brand .name {
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -.03em;
+  color: #ffffff;
+}
+.shop-page-responsive .footer-brand .name span {
+  color: #9bd59d;
+}
+.shop-page-responsive .footer-brand .tag {
+  font-size: 12px;
+  color: #b9c8bc;
+  margin-top: 2px;
+}
+.shop-page-responsive .footer-brand .desc {
+  max-width: 350px;
+  margin: 14px 0 0;
+  color: #b9c8bc;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.shop-page-responsive .footer-col h4 {
+  margin: 0 0 14px;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+}
+.shop-page-responsive .footer-col a,
+.shop-page-responsive .footer-col div {
+  display: block;
+  margin: 0 0 9px;
+  color: #b9c8bc;
+  font-size: 12px;
+  text-decoration: none;
+  cursor: pointer;
+}
+.shop-page-responsive .footer-col a:hover {
+  color: #ffffff;
+}
+@media (max-width: 1050px) {
+  .shop-page-responsive .footer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 30px;
+  }
+}
+
+/* ===== Tablet ===== */
+@media (max-width: 900px) {
+  .shop-page-responsive .hero.shop-landing-hero {
+    background: linear-gradient(165deg, #2f6b45 0%, #19462b 55%, #123821 100%);
+  }
+  /* Lapisan putih di banner dibuat gelap supaya tulisan putih terbaca */
+  .shop-page-responsive .shop-landing-hero::before {
+    background: linear-gradient(180deg, rgba(255,255,255,.10) 0%, rgba(10,40,22,.25) 100%);
+  }
+  .shop-page-responsive .best-seller-section,
+  .shop-page-responsive .all-products-section {
+    padding: 32px 24px;
+  }
+  .shop-page-responsive .all-products-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+}
+
+/* ===== HP ===== */
+@media (max-width: 720px) {
+  .shop-page-responsive .topbar {
+    padding: 12px 14px;
+    gap: 12px;
+  }
+
+  /* Banner lebih pendek */
+  .shop-page-responsive .shop-landing-hero {
+    width: auto;
+    margin: 12px 14px;
+    padding: 22px 18px;
+    gap: 10px;
+    min-height: 0;
+    border-radius: 20px;
+  }
+  .shop-page-responsive .shop-landing-hero .hero-left-character {
+    width: 100%;
+    min-height: 0;
+    height: auto;
+  }
+  .shop-page-responsive .shop-landing-hero .character-img {
+    width: auto;
+    max-width: 70%;
+    max-height: 130px;
+    margin: 0 auto;
+  }
+  .shop-page-responsive .shop-landing-hero .hero-right-content {
+    width: 100%;
+  }
+  .shop-page-responsive .shop-landing-hero .hero-right-content h1 {
+    font-size: 24px;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .shop-page-responsive .shop-landing-hero .hero-right-content p {
+    font-size: 13px;
+  }
+
+  /* Kategori jadi satu baris yang bisa digeser */
+  .shop-page-responsive .shop-categories-bar {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    gap: 8px;
+    margin: 16px 0;
+    padding: 2px 14px 6px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .shop-page-responsive .shop-categories-bar::-webkit-scrollbar {
+    display: none;
+  }
+  .shop-page-responsive .shop-cat-item {
+    flex: 0 0 auto;
+    padding: 8px 14px;
+    gap: 8px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  .shop-page-responsive .shop-cat-item svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .shop-page-responsive .best-seller-section,
+  .shop-page-responsive .all-products-section {
+    padding: 24px 14px;
+  }
+
+  /* Best Seller jadi satu baris yang bisa digeser */
+  .shop-page-responsive .best-seller-grid {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 0 0 6px;
+    scrollbar-width: none;
+  }
+  .shop-page-responsive .best-seller-grid::-webkit-scrollbar {
+    display: none;
+  }
+  .shop-page-responsive .best-seller-grid .shop-product-card {
+    flex: 0 0 calc(50% - 5px);
+    scroll-snap-align: start;
+  }
+
+  /* Semua Produk: 2 kolom */
+  .shop-page-responsive .all-products-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .shop-page-responsive .shop-product-card {
+    min-width: 0;
+    padding: 10px;
+    border-radius: 14px;
+  }
+  .shop-page-responsive .shop-product-img {
+    height: 120px;
+    margin-bottom: 8px;
+  }
+  .shop-page-responsive .shop-product-details {
+    gap: 6px;
+  }
+  .shop-page-responsive .prod-meta {
+    min-width: 0;
+  }
+  .shop-page-responsive .prod-title {
+    font-size: 14px;
+    line-height: 1.3;
+  }
+  .shop-page-responsive .prod-cat {
+    font-size: 11px;
+  }
+  .shop-page-responsive .prod-price {
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  .shop-page-responsive .shop-cart-btn {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+  }
+
+  /* Judul + filter Semua Produk */
+  .shop-page-responsive .all-products-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .shop-page-responsive .filter-controls {
+    width: 100%;
+    gap: 8px;
+  }
+  .shop-page-responsive .filter-dropdown-wrapper {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .shop-page-responsive .filter-select-native {
+    width: 100%;
+    min-width: 0;
+    font-size: 13px;
+  }
+
+  .shop-page-responsive .service-features-banner {
+    margin: 24px 0;
+    padding: 16px 14px;
+  }
+
+  .shop-page-responsive .footer-grid {
+    width: calc(100% - 48px);
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+}
+
 `}</style>
       
       
@@ -2050,236 +2355,18 @@ style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity:
 </form>
         
 <div className="actions">
-          
-<div
-            
-className="action-item"
-            
-onClick={() => {
-              
-if (user) {
-                
-setPage("profile");
-              
-} else {
-                
-setPage("auth");
-              
-}
-            
-}}
-            
-style={{ cursor: "pointer" }}
-          
->
-            
-<div
-              
-className="icon"
-              
-style={
-                
-user
-                  
-? {
-                      
-overflow: "hidden",
-                      
-borderRadius: "50%",
-                      
-width: "38px",
-                      
-height: "38px",
-                    
-}
-                  
-: {}
-              
-}
-            
->
-              
-{user && user.avatar ? (
-                
-<img
-                  
-src={user.avatar}
-                  
-alt="Profile"
-                  
-style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                
-/>
-              
-) : (
-                
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  
-<circle cx="12" cy="8" r="4"/>
-                  
-<path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>
-                
-</svg>
-              
-)}
-            
-</div>
-            
-<div className="label">
-              
-<small>{user ? user.role || "Member" : "Sign in / Register"}</small>
-              
-<strong>{user ? user.name : "My Account"}</strong>
-            
-</div>
-          
-</div>
-          
-<button
-            
-type="button"
-            
-onClick={() => setIsCartOpen(true)}
-            
-aria-label="Buka keranjang"
-            
-style={{
-              
-border: "none",
-              
-background: "transparent",
-              
-padding: 0,
-              
-margin: 0,
-              
-cursor: "pointer",
-              
-display: "flex",
-              
-alignItems: "center",
-            
-}}
-          
->
-            
-<div className="action-item" style={{ position: "relative" }}>
-              
-<div className="icon">
-                
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  
-<circle cx="9" cy="21" r="1"/>
-                  
-<circle cx="20" cy="21" r="1"/>
-                  
-<path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/>
-                
-</svg>
-              
-</div>
-              
-<div className="label">
-                
-<small>My cart</small>
-                
-<strong>{formatRupiah(cartTotal)}</strong>
-              
-</div>
-              
-{cartCount > 0 && (
-                
-<span
-                  
-style={{
-                    
-position: "absolute",
-                    
-top: -7,
-                    
-left: 28,
-                    
-minWidth: 21,
-                    
-height: 21,
-                    
-padding: "0 5px",
-                    
-borderRadius: 999,
-                    
-background: "#1f7a45",
-                    
-color: "#fff",
-                    
-fontSize: 11,
-                    
-fontWeight: 800,
-                    
-display: "flex",
-                    
-alignItems: "center",
-                    
-justifyContent: "center",
-                    
-border: "2px solid #fff",
-                  
-}}
-                
->
-                  
-{cartCount}
-                
-</span>
-              
-)}
-            
-</div>
-          
-</button>
-          
-<button
-            
-type="button"
-            
-onClick={() => setIsMenuOpen(true)}
-            
-aria-label="Buka menu"
-            
-style={{
-              
-width: 44,
-              
-height: 44,
-              
-border: "none",
-              
-borderRadius: 12,
-              
-background: "#eef7f0",
-              
-color: "#165c35",
-              
-display: "flex",
-              
-alignItems: "center",
-              
-justifyContent: "center",
-              
-cursor: "pointer",
-              
-marginLeft: 2,
-            
-}}
-          
->
-            
-<svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              
-<path d="M4 6h16M4 12h16M4 18h16"/>
-            
-</svg>
-          
-</button>
+          <button
+            type="button"
+            className="hdr-menu-btn"
+            onClick={() => setIsMenuOpen(true)}
+            aria-label="Buka menu"
+          >
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <path d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+            <span>Menu</span>
+            {cartCount > 0 && <b className="hdr-menu-badge">{cartCount}</b>}
+          </button>
         
 </div>
       
@@ -2883,7 +2970,11 @@ style={{ width: "100%", height: "100%", objectFit: "contain" }}
             
 <div>
               
-<div className="name">Living Smart</div>
+<div className="name">
+                
+Living <span>Smart</span>
+              
+</div>
               
 <div className="tag">Solusi sayur segar dan sehat</div>
               
@@ -2923,25 +3014,13 @@ Menghubungkan teknologi dan pertanian untuk masa depan pangan yang lebih hijau d
           
 <div className="footer-col">
             
-<h4>Information</h4>
-            
-<motion.a href="#faq" whileHover={{ x: 3 }}>FAQ</motion.a>
-            
-<motion.a href="#terms" whileHover={{ x: 3 }}>Terms &amp; Conditions</motion.a>
-            
-<motion.a href="#privacy" whileHover={{ x: 3 }}>Privacy Policy</motion.a>
-          
-</div>
-          
-<div className="footer-col">
-            
 <h4>Contact Us</h4>
             
-<motion.div className="footer-contact-item" whileHover={{ x: 3 }}>📍 Gisting, Tanggamus</motion.div>
+<div className="footer-contact-item">📍 Gisting, Tanggamus</div>
             
-<motion.div className="footer-contact-item" whileHover={{ x: 3 }}>📞 +62 812 3456 7890</motion.div>
+<div className="footer-contact-item">📞 +62 812 3456 7890</div>
             
-<motion.div className="footer-contact-item" whileHover={{ x: 3 }}>✉️ Livingmart@gmail.com</motion.div>
+<div className="footer-contact-item">✉️ Livingmart@gmail.com</div>
           
 </div>
         
@@ -3070,6 +3149,14 @@ color: "#526158",
 </div>
             
 <div style={{ display: "grid", gap: 10 }}>
+            <button className="shop-menu-btn hdr-akun" onClick={() => setPage(user ? "profile" : "auth")}>
+              <span>{user && user.avatar ? <img src={user.avatar} alt="" /> : "👤"}</span>
+              <span>
+                <strong>{user ? user.name : "Masuk / Daftar"}</strong>
+                <small>{user ? "Lihat profil saya" : "Masuk untuk belanja"}</small>
+              </span>
+            </button>
+
               
 <button className="shop-menu-btn" onClick={() => setPage("home")}>
                 
@@ -3097,7 +3184,7 @@ color: "#526158",
               
 <button className="shop-menu-btn" onClick={() => { setIsMenuOpen(false); setIsCartOpen(true); }}>
                 
-<span>🛒</span><span>Keranjang ({cartCount})</span>
+<span>🛒</span><span>Keranjang ({cartCount}) · {formatRupiah(cartTotal)}</span>
               
 </button>
             

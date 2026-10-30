@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { MapPin, Clock, Navigation, ExternalLink, Warehouse, Radio, LogIn, User, Package, LogOut, ChevronDown } from "lucide-react";
+import { MapPin, Clock, Navigation, ExternalLink, Warehouse, Radio, LogIn, User, Package, LogOut, ChevronDown, LayoutDashboard } from "lucide-react";
 import "../index.css";
 import logoImg from "../assets/logo.svg";
 import landsBg from "../assets/lands.jpg";
@@ -1172,7 +1172,18 @@ style={{ width: "100%", height: "100%", objectFit: "contain" }}
           
 {/* Tombol masuk / menu akun pembeli */}
           
-<AccountMenu user={user} setPage={setPage} onLogout={onLogout} />
+<div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+            <motion.button
+              onClick={() => setPage("dashboard")}
+              whileHover={{ y: -1 }}
+              whileTap={{ scale: 0.97 }}
+              className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-[#cfe3d2] bg-white px-4 py-2.5 text-sm font-bold text-[#16502D] shadow-sm hover:bg-[#f4faf5]"
+            >
+              <LayoutDashboard size={16} />
+              <span className="hidden sm:inline">Dashboard</span>
+            </motion.button>
+            <AccountMenu user={user} setPage={setPage} onLogout={onLogout} />
+          </div>
         
 </motion.header>
         

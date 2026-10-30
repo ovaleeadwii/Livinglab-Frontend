@@ -1163,9 +1163,11 @@ autoFocus
   
 );
 }
-export default function DashboardPage({ setPage }) {
+export default function DashboardPage({ setPage, user }) {
   
 const [activeTab, setActiveTab] = useState("nutrient");
+  // Menu samping (sama seperti di Shop)
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   
 const [period, setPeriod] = useState("1D");
   
@@ -1375,6 +1377,82 @@ font-weight: 500;
         
 }
         
+.hdr-menu-btn {
+  position: relative;
+  height: 46px;
+  padding: 0 16px 0 13px;
+  border: none;
+  border-radius: 12px;
+  background: #165c35;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(22, 92, 53, 0.22);
+  transition: .2s ease;
+  flex-shrink: 0;
+}
+.hdr-menu-btn:hover { background: #124d2b; transform: translateY(-1px); }
+.hdr-menu-badge {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  min-width: 21px;
+  height: 21px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #e08a00;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+}
+.shop-menu-btn.hdr-akun { background: #f4faf5; border-color: #d7e8da; }
+.shop-menu-btn.hdr-akun span:first-child { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; font-size: 18px; }
+.shop-menu-btn.hdr-akun img { width: 100%; height: 100%; object-fit: cover; }
+.shop-menu-btn.hdr-akun span:last-child { display: flex; flex-direction: column; min-width: 0; }
+.shop-menu-btn.hdr-akun strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.shop-menu-btn.hdr-akun small { color: #6d7b72; font-size: 12px; font-weight: 500; }
+@media (max-width: 640px) {
+  .hdr-menu-btn span { display: none; }
+  .hdr-menu-btn { width: 46px; padding: 0; justify-content: center; }
+}
+.shop-menu-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 15px;
+  border: 1px solid #e6eee7;
+  border-radius: 12px;
+  background: #fff;
+  color: #173524;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  transition: .2s ease;
+}
+.shop-menu-btn:hover { background: #eff8f1; border-color: #cfe3d2; transform: translateX(-2px); }
+.shop-menu-btn.aktif { border-color: #1f7a43; background: #eff8f1; }
+.shop-menu-btn span:first-child {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: #eef7f0;
+  color: #176137;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
 .pro-header-actions {
           
 display: flex;
@@ -2339,19 +2417,17 @@ min-height: auto;
             
 padding: 14px 0;
             
-align-items: flex-start;
+align-items: center;
             
-flex-direction: column;
+flex-direction: row;
           
 }
           
 .pro-header-actions {
             
-width: 100%;
+width: auto;
             
-display: grid;
-            
-grid-template-columns: 1fr 1fr;
+display: flex;
           
 }
           
@@ -3308,44 +3384,86 @@ Solusi sayur segar dan sehat
 </button>
           
 <div className="pro-header-actions">
-            
-<button
-              
-type="button"
-              
-className="pro-nav-button"
-              
-onClick={goHome}
-            
->
-              
-<span>⌂</span>
-              
-Home
-            
-</button>
-            
-<button
-              
-type="button"
-              
-className="pro-nav-button market"
-              
-onClick={goMarketplace}
-            
->
-              
-<span>🛒</span>
-              
-Marketplace
-            
-</button>
-          
-</div>
+            <button
+              type="button"
+              className="hdr-menu-btn"
+              onClick={() => setIsMenuOpen(true)}
+              aria-label="Buka menu"
+            >
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M4 6h16M4 12h16M4 18h16"/>
+              </svg>
+              <span>Menu</span>
+            </button>
+          </div>
         
 </div>
       
 </header>
+
+      {/* MENU SAMPING (sama seperti di Shop) */}
+      {isMenuOpen && (
+        <div
+          onClick={() => setIsMenuOpen(false)}
+          style={{ position: "fixed", inset: 0, zIndex: 9998, background: "rgba(15, 35, 23, 0.32)" }}
+        >
+          <aside
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              width: "min(360px, 88vw)",
+              height: "100%",
+              background: "#fff",
+              boxShadow: "-12px 0 35px rgba(0,0,0,.15)",
+              padding: 24,
+              overflowY: "auto",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+              <div>
+                <div style={{ fontSize: 12, color: "#6d7b72" }}>AGRI-ICS</div>
+                <h3 style={{ margin: "3px 0 0", color: "#173524", fontSize: 22 }}>Menu</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsMenuOpen(false)}
+                style={{
+                  width: 38,
+                  height: 38,
+                  borderRadius: "50%",
+                  border: "1px solid #e1e8e2",
+                  background: "#fff",
+                  cursor: "pointer",
+                  fontSize: 22,
+                  color: "#526158",
+                }}
+              >
+                ×
+              </button>
+            </div>
+            <div style={{ display: "grid", gap: 10 }}>
+              <button className="shop-menu-btn hdr-akun" onClick={() => setPage(user ? "profile" : "auth")}>
+                <span>{user && user.avatar ? <img src={user.avatar} alt="" /> : "👤"}</span>
+                <span>
+                  <strong>{user ? user.name : "Masuk / Daftar"}</strong>
+                  <small>{user ? "Lihat profil saya" : "Masuk untuk belanja"}</small>
+                </span>
+              </button>
+              <button className="shop-menu-btn" onClick={goHome}>
+                <span>⌂</span><span>Home</span>
+              </button>
+              <button className="shop-menu-btn aktif" onClick={() => setIsMenuOpen(false)}>
+                <span>▦</span><span>Dashboard</span>
+              </button>
+              <button className="shop-menu-btn" onClick={goMarketplace}>
+                <span>🛒</span><span>Marketplace</span>
+              </button>
+            </div>
+          </aside>
+        </div>
+      )}
       
 {/* INTRO */}
       
